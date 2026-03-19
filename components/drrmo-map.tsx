@@ -9,7 +9,13 @@ import type { Sensor } from "@/data/sensors";
 const URGENCY_COLORS: Record<string, string> = {
   Critical: "#dc2626",
   Moderate: "#f59e0b",
-  Low: "#eab308",
+  Low: "#ca8a04",
+};
+
+const URGENCY_BG: Record<string, string> = {
+  Critical: "#fef2f2",
+  Moderate: "#fffbeb",
+  Low: "#fefce8",
 };
 
 interface DrrmoMapProps {
@@ -17,10 +23,43 @@ interface DrrmoMapProps {
   visibleReports: SmsReport[];
 }
 
+// Build compact popup HTML for auto-show on new report
+function buildCompactPopup(report: SmsReport): string {
+  const color = URGENCY_COLORS[report.nlp.urgency] || "#ca8a04";
+  const bg = URGENCY_BG[report.nlp.urgency] || "#fefce8";
+  return `
+    <div style="font-family:system-ui,sans-serif;min-width:180px;max-width:220px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:8px;">
+        <span style="font-size:11px;font-weight:700;color:#1a1a1a;">${report.nlp.hazard}</span>
+        <span style="font-size:10px;font-weight:600;color:${color};background:${bg};padding:1px 6px;border-radius:3px;">${report.nlp.urgency}</span>
+      </div>
+      <div style="font-size:10px;color:#52524e;margin-bottom:4px;">${report.nlp.location}</div>
+      <div style="font-size:10px;color:#8a8a86;font-style:italic;border-top:1px solid #e5e2de;padding-top:4px;line-height:1.4;">"${report.sms.length > 60 ? report.sms.slice(0, 60) + "…" : report.sms}"</div>
+      <div style="font-size:9px;color:#8a8a86;margin-top:3px;">${report.timestamp} · Geocoded & plotted</div>
+    </div>`;
+}
+
+// Build full popup HTML for on-click
+function buildFullPopup(report: SmsReport): string {
+  const color = URGENCY_COLORS[report.nlp.urgency] || "#ca8a04";
+  return `
+    <div style="font-family:system-ui,sans-serif;font-size:12px;max-width:230px;">
+      <div style="font-style:italic;margin-bottom:6px;color:#52524e;line-height:1.4;">"${report.sms}"</div>
+      <div style="font-size:11px;font-weight:600;margin-bottom:4px;color:#1a1a1a;">NLP Classification</div>
+      Hazard: <strong>${report.nlp.hazard}</strong><br/>
+      Location: ${report.nlp.location}<br/>
+      Urgency: <span style="color:${color};font-weight:700;">${report.nlp.urgency}</span><br/>
+      Time: ${report.timestamp}<br/>
+      Status: Geocoded and plotted
+    </div>`;
+}
+
 export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const reportMarkersRef = useRef<L.CircleMarker[]>([]);
+  const markerMapRef = useRef<Map<number, L.CircleMarker>>(new Map());
+  const prevCountRef = useRef(0);
+  const autoCloseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize map once
   useEffect(() => {
@@ -45,7 +84,7 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
         color: "#1e40af",
         weight: 2,
         opacity: 1,
-        fillOpacity: 0.8,
+        fillOpacity: 0.85,
       }).addTo(map);
 
       marker.bindPopup(
@@ -56,7 +95,6 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
         </div>`
       );
 
-      // Label
       L.marker([sensor.lat, sensor.lng], {
         icon: L.divIcon({
           className: "",
@@ -69,45 +107,79 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
     mapRef.current = map;
 
     return () => {
+      if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
       map.remove();
       mapRef.current = null;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update report markers
+  // Sync report markers — add new ones incrementally, don't rebuild all
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // Remove old markers
-    reportMarkersRef.current.forEach((m) => m.remove());
-    reportMarkersRef.current = [];
+    const map = mapRef.current;
+    const markerMap = markerMapRef.current;
+    const prevCount = prevCountRef.current;
+    const newCount = visibleReports.length;
 
-    visibleReports.forEach((report) => {
-      const color = URGENCY_COLORS[report.nlp.urgency] || "#eab308";
+    // Reset: visible reports went from non-zero to zero (simulation reset)
+    if (newCount === 0 && prevCount > 0) {
+      markerMap.forEach((m) => m.remove());
+      markerMap.clear();
+      prevCountRef.current = 0;
+      return;
+    }
+
+    // Add only newly-added reports
+    const newReports = visibleReports.slice(prevCount);
+    newReports.forEach((report) => {
+      const color = URGENCY_COLORS[report.nlp.urgency] || "#ca8a04";
+
       const marker = L.circleMarker([report.lat, report.lng], {
-        radius: 8,
+        radius: 9,
         fillColor: color,
         color: color,
         weight: 2,
         opacity: 1,
-        fillOpacity: 0.7,
-      }).addTo(mapRef.current!);
+        fillOpacity: 0.75,
+      }).addTo(map);
 
-      marker.bindPopup(
-        `<div style="font-family:system-ui;font-size:12px;max-width:220px;">
-          <div style="font-style:italic;margin-bottom:6px;color:#52524e;">"${report.sms}"</div>
-          <strong>NLP Classification:</strong><br/>
-          Hazard: ${report.nlp.hazard}<br/>
-          Location: ${report.nlp.location}<br/>
-          Urgency: <span style="color:${color};font-weight:600;">${report.nlp.urgency}</span><br/>
-          Time: ${report.timestamp}<br/>
-          Status: Geocoded and plotted
-        </div>`
-      );
+      // On-click full popup
+      marker.bindPopup(buildFullPopup(report), { maxWidth: 260 });
 
-      reportMarkersRef.current.push(marker);
+      markerMap.set(report.id, marker);
     });
+
+    // If a new report was added, show the compact auto-popup on it
+    if (newCount > prevCount && newReports.length > 0) {
+      const newestReport = newReports[newReports.length - 1];
+      const newestMarker = markerMap.get(newestReport.id);
+
+      if (newestMarker) {
+        // Cancel any existing auto-close timer
+        if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
+
+        // Close all open popups first
+        map.closePopup();
+
+        // Temporarily bind and open the compact popup
+        newestMarker.bindPopup(buildCompactPopup(newestReport), {
+          maxWidth: 240,
+          closeButton: false,
+          autoPan: false,
+        });
+        newestMarker.openPopup();
+
+        // After 2.5s, switch back to the full popup (for on-click use) and close
+        autoCloseTimerRef.current = setTimeout(() => {
+          map.closePopup();
+          newestMarker.bindPopup(buildFullPopup(newestReport), { maxWidth: 260 });
+        }, 2500);
+      }
+    }
+
+    prevCountRef.current = newCount;
   }, [visibleReports]);
 
   return (

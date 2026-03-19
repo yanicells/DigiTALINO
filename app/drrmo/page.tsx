@@ -33,6 +33,7 @@ export default function DrrmoDashboard() {
   ]);
   const [isRunning, setIsRunning] = useState(false);
   const [simStep, setSimStep] = useState(0);
+  const [yellowWarning, setYellowWarning] = useState(false);
   const [thresholdBreached, setThresholdBreached] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -43,6 +44,7 @@ export default function DrrmoDashboard() {
     setSimStep(0);
     setVisibleReports([]);
     setSensors(initialSensors);
+    setYellowWarning(false);
     setThresholdBreached(false);
     setAlertLog([
       { time: "14:22:00", message: "Routine monitoring: All sensors within normal range", level: "info" },
@@ -57,46 +59,47 @@ export default function DrrmoDashboard() {
       setSimStep((prev) => {
         const next = prev + 1;
 
-        // Add SMS reports one by one
+        // Always add next SMS if available
         if (next <= smsReports.length) {
           setVisibleReports(smsReports.slice(0, next));
         }
 
-        // Step 4: S-002 ticks up slightly, first info alert
-        if (next === 4) {
+        // Step 3: S-002 starts rising
+        if (next === 3) {
           setSensors((s) =>
             s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.8, status: "elevated" as const } : x)
           );
           setAlertLog((l) => [
             ...l,
-            { time: "14:26:00", message: "Sensor S-002 water level rising: 2.8m — monitoring closely (threshold: 3.0m)", level: "info" },
+            { time: "14:25:38", message: "S-002 rising: 2.8m — monitoring actively (threshold: 3.0m)", level: "info" },
           ]);
         }
 
-        // Step 7: Rising further — yellow warning
-        if (next === 7) {
+        // Step 4: After 4 SMS — YELLOW WARNING
+        if (next === 4) {
           setSensors((s) =>
-            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.85, status: "elevated" as const } : x)
+            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.87, status: "elevated" as const } : x)
           );
+          setYellowWarning(true);
           setAlertLog((l) => [
             ...l,
-            { time: "14:29:55", message: "WARNING — S-002 at 2.85m: Approaching flood threshold. DRRMO standby activated.", level: "warning" },
+            { time: "14:26:30", message: "WARNING — S-002 at 2.87m: Approaching flood threshold. DRRMO teams on standby.", level: "warning" },
           ]);
         }
 
-        // Step 10: Even higher — stronger yellow warning
-        if (next === 10) {
+        // Step 7: S-002 approaching critical
+        if (next === 7) {
           setSensors((s) =>
             s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.95, status: "elevated" as const } : x)
           );
           setAlertLog((l) => [
             ...l,
-            { time: "14:32:10", message: "WARNING — S-002 at 2.95m: Brgy Riverside pre-emptive evacuation advisory issued.", level: "warning" },
+            { time: "14:29:55", message: "WARNING — S-002 at 2.95m: Pre-emptive evacuation advisory for Brgy Riverside issued.", level: "warning" },
           ]);
         }
 
-        // Step 13: Threshold breach — red critical
-        if (next === 13) {
+        // Step 8: After 8 SMS — RED CRITICAL BREACH
+        if (next === 8) {
           setSensors((s) =>
             s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 3.0, status: "critical" as const } : x)
           );
@@ -104,7 +107,7 @@ export default function DrrmoDashboard() {
           setAlertLog((l) => [
             ...l,
             {
-              time: "14:35:03",
+              time: "14:30:22",
               message: "THRESHOLD BREACHED: S-002 at 3.0m — Bulk SMS dispatched to 2,847 registered residents in Barangay Riverside",
               level: "critical",
             },
@@ -130,7 +133,17 @@ export default function DrrmoDashboard() {
 
   return (
     <div className="min-h-full">
-      {/* Threshold Breach Banner */}
+      {/* Yellow Elevated Warning Banner */}
+      {yellowWarning && !thresholdBreached && (
+        <div className="px-8 py-3 bg-accent-amber text-white flex items-center gap-3">
+          <AlertTriangle size={18} />
+          <span className="text-sm font-medium">
+            ELEVATED WATER LEVEL — Sensor S-002 (Riverside Canal) approaching flood threshold — DRRMO teams on standby, evacuation advisory issued
+          </span>
+        </div>
+      )}
+
+      {/* Red Threshold Breach Banner */}
       {thresholdBreached && (
         <div className="px-8 py-3 bg-accent-red text-white flex items-center gap-3">
           <AlertTriangle size={18} />
