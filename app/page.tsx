@@ -15,7 +15,7 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-text-primary leading-tight mb-4">
           DigiTALINO: A Digital Intelligence Platform
           <br />
-          <span className="text-primary">for a Smarter and Resilient Pag-asa</span>
+          <span className="text-primary">for a Smarter and Resilient Bagong Pag-asa</span>
         </h1>
         <p className="text-base text-text-secondary max-w-2xl mx-auto mb-10">
           Modernizing governance through modular digital services for 150,000
