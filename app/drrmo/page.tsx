@@ -29,6 +29,7 @@ export default function DrrmoDashboard() {
   const [visibleReports, setVisibleReports] = useState<SmsReport[]>([]);
   const [alertLog, setAlertLog] = useState<{ time: string; message: string; level: "info" | "warning" | "critical" }[]>([
     { time: "14:22:00", message: "Routine monitoring: All sensors within normal range", level: "info" },
+    { time: "14:23:00", message: "S-002 Riverside Canal: 2.7m — Elevated. Continuing observation.", level: "info" },
   ]);
   const [isRunning, setIsRunning] = useState(false);
   const [simStep, setSimStep] = useState(0);
@@ -45,6 +46,7 @@ export default function DrrmoDashboard() {
     setThresholdBreached(false);
     setAlertLog([
       { time: "14:22:00", message: "Routine monitoring: All sensors within normal range", level: "info" },
+      { time: "14:23:00", message: "S-002 Riverside Canal: 2.7m — Elevated. Continuing observation.", level: "info" },
     ]);
   }, []);
 
@@ -60,39 +62,49 @@ export default function DrrmoDashboard() {
           setVisibleReports(smsReports.slice(0, next));
         }
 
-        // Gradually increase S-002 water level
-        if (next === 2) {
-          setSensors((prev) =>
-            prev.map((s) =>
-              s.id === "S-002" ? { ...s, waterLevel: 2.8, status: "elevated" as const } : s
-            )
+        // Step 4: S-002 ticks up slightly, first info alert
+        if (next === 4) {
+          setSensors((s) =>
+            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.8, status: "elevated" as const } : x)
           );
-          setAlertLog((prev) => [
-            ...prev,
-            { time: "14:28:00", message: "Sensor S-002 elevated: 2.8m (threshold: 3.0m)", level: "warning" },
+          setAlertLog((l) => [
+            ...l,
+            { time: "14:26:00", message: "Sensor S-002 water level rising: 2.8m — monitoring closely (threshold: 3.0m)", level: "info" },
           ]);
         }
 
-        if (next === 4) {
-          setSensors((prev) =>
-            prev.map((s) =>
-              s.id === "S-002" ? { ...s, waterLevel: 2.9, status: "elevated" as const } : s
-            )
+        // Step 7: Rising further — yellow warning
+        if (next === 7) {
+          setSensors((s) =>
+            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.85, status: "elevated" as const } : x)
           );
+          setAlertLog((l) => [
+            ...l,
+            { time: "14:29:55", message: "WARNING — S-002 at 2.85m: Approaching flood threshold. DRRMO standby activated.", level: "warning" },
+          ]);
         }
 
-        // Threshold breach at step 5
-        if (next === 5) {
-          setSensors((prev) =>
-            prev.map((s) =>
-              s.id === "S-002" ? { ...s, waterLevel: 3.0, status: "critical" as const } : s
-            )
+        // Step 10: Even higher — stronger yellow warning
+        if (next === 10) {
+          setSensors((s) =>
+            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.95, status: "elevated" as const } : x)
+          );
+          setAlertLog((l) => [
+            ...l,
+            { time: "14:32:10", message: "WARNING — S-002 at 2.95m: Brgy Riverside pre-emptive evacuation advisory issued.", level: "warning" },
+          ]);
+        }
+
+        // Step 13: Threshold breach — red critical
+        if (next === 13) {
+          setSensors((s) =>
+            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 3.0, status: "critical" as const } : x)
           );
           setThresholdBreached(true);
-          setAlertLog((prev) => [
-            ...prev,
+          setAlertLog((l) => [
+            ...l,
             {
-              time: "14:31:00",
+              time: "14:35:03",
               message: "THRESHOLD BREACHED: S-002 at 3.0m — Bulk SMS dispatched to 2,847 registered residents in Barangay Riverside",
               level: "critical",
             },
@@ -161,14 +173,14 @@ export default function DrrmoDashboard() {
       <div className="p-8">
         <div className="flex gap-6" style={{ height: "calc(100vh - 200px)" }}>
           {/* Left: Map */}
-          <div className="flex-[3] min-w-0">
+          <div className="flex-3 min-w-0">
             <div className="bg-white border border-border rounded h-full overflow-hidden">
               <DrrmoMap sensors={sensors} visibleReports={visibleReports} />
             </div>
           </div>
 
           {/* Right: Panel */}
-          <div className="flex-[2] flex flex-col gap-4 overflow-y-auto min-w-[340px]">
+          <div className="flex-2 flex flex-col gap-4 overflow-y-auto min-w-85">
             {/* Sensor Readings */}
             <div className="bg-white border border-border rounded">
               <div className="px-4 py-3 border-b border-border">
@@ -217,7 +229,7 @@ export default function DrrmoDashboard() {
 
             {/* SMS Feed */}
             <div className="bg-white border border-border rounded flex-1 flex flex-col min-h-0">
-              <div className="px-4 py-3 border-b border-border flex-shrink-0">
+              <div className="px-4 py-3 border-b border-border shrink-0">
                 <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <MessageSquare size={14} />
                   Live SMS Report Feed

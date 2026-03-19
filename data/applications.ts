@@ -4,7 +4,7 @@ export interface Application {
   businessName: string;
   type: "New" | "Renewal";
   dateFiled: string;
-  status: "Approved" | "Rejected" | "For Review" | "In Review";
+  status: "Approved" | "Rejected" | "For Review" | "In Review" | "AI Review";
   statusDetail?: string;
   applicantInfo: {
     fullName: string;
@@ -66,10 +66,19 @@ export const applications: Application[] = [
     ],
     aiCheck: [
       { label: "All required documents detected", status: "pass" },
-      { label: "DTI Registration: Valid format, number matches records", status: "pass" },
-      { label: "Barangay Clearance: Current year, correct barangay", status: "pass" },
+      {
+        label: "DTI Registration: Valid format, number matches records",
+        status: "pass",
+      },
+      {
+        label: "Barangay Clearance: Current year, correct barangay",
+        status: "pass",
+      },
       { label: "Zoning Clearance: Approved", status: "pass" },
-      { label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa", status: "pass" },
+      {
+        label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa",
+        status: "pass",
+      },
     ],
   },
   {
@@ -106,10 +115,19 @@ export const applications: Application[] = [
     ],
     aiCheck: [
       { label: "All required documents detected", status: "pass" },
-      { label: "DTI Registration: Valid format, number matches records", status: "pass" },
-      { label: "Barangay Clearance: Current year, correct barangay", status: "pass" },
+      {
+        label: "DTI Registration: Valid format, number matches records",
+        status: "pass",
+      },
+      {
+        label: "Barangay Clearance: Current year, correct barangay",
+        status: "pass",
+      },
       { label: "Zoning Clearance: Approved", status: "pass" },
-      { label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa", status: "pass" },
+      {
+        label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa",
+        status: "pass",
+      },
     ],
   },
   {
@@ -146,11 +164,26 @@ export const applications: Application[] = [
       { name: "Previous Year's Business Permit", status: "na" },
     ],
     aiCheck: [
-      { label: "Missing document: Sanitary Permit from Municipal Health Office", status: "warning" },
-      { label: "DTI Registration: Valid format, number matches records", status: "pass" },
-      { label: "Barangay Clearance: Current year, correct barangay", status: "pass" },
-      { label: "Zoning Clearance: Awaiting this department's review", status: "warning" },
-      { label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa", status: "pass" },
+      {
+        label: "Missing document: Sanitary Permit from Municipal Health Office",
+        status: "warning",
+      },
+      {
+        label: "DTI Registration: Valid format, number matches records",
+        status: "pass",
+      },
+      {
+        label: "Barangay Clearance: Current year, correct barangay",
+        status: "pass",
+      },
+      {
+        label: "Zoning Clearance: Awaiting this department's review",
+        status: "warning",
+      },
+      {
+        label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa",
+        status: "pass",
+      },
     ],
   },
   {
@@ -187,10 +220,175 @@ export const applications: Application[] = [
     ],
     aiCheck: [
       { label: "All required documents detected", status: "pass" },
-      { label: "DTI Registration: Valid format, number matches records", status: "pass" },
-      { label: "Barangay Clearance: Current year, correct barangay", status: "pass" },
+      {
+        label: "DTI Registration: Valid format, number matches records",
+        status: "pass",
+      },
+      {
+        label: "Barangay Clearance: Current year, correct barangay",
+        status: "pass",
+      },
       { label: "Zoning Clearance: Approved", status: "pass" },
-      { label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa", status: "pass" },
+      {
+        label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa",
+        status: "pass",
+      },
+    ],
+  },
+  {
+    refNo: "BP-2026-00149",
+    applicant: "Carmela Villanueva",
+    businessName: "Villanueva Beauty Salon",
+    type: "New",
+    dateFiled: "Mar 19, 2026",
+    status: "AI Review",
+    applicantInfo: {
+      fullName: "Carmela Villanueva",
+      philsysId: "PSN-2022-00891234",
+      contact: "0922-891-2345",
+      email: "carmela.villanueva@email.com",
+      address: "34 Magsaysay St., Brgy. Centro, Bagong Pag-asa",
+    },
+    businessInfo: {
+      businessName: "Villanueva Beauty Salon",
+      businessType: "Sole Proprietorship",
+      businessAddress: "34 Magsaysay St., Brgy. Centro, Bagong Pag-asa",
+      lineOfBusiness: "Personal Care Services",
+      dtiSecNumber: "DTI-2026-011234",
+      capitalization: "₱180,000",
+    },
+    documents: [
+      { name: "Barangay Business Clearance", status: "uploaded" },
+      { name: "DTI/SEC/CDA Certificate of Registration", status: "uploaded" },
+      { name: "Contract of Lease or Land Title", status: "uploaded" },
+      { name: "Community Tax Certificate (Cedula)", status: "uploaded" },
+      { name: "Fire Safety Inspection Certificate", status: "uploaded" },
+      { name: "Sanitary Permit", status: "uploaded" },
+      { name: "Zoning Clearance", status: "uploaded" },
+      { name: "Previous Year's Business Permit", status: "na" },
+    ],
+    aiCheck: [
+      { label: "Scanning documents... 6/7 verified", status: "info" },
+      {
+        label: "DTI Registration: Cross-referencing with DTI database",
+        status: "info",
+      },
+      {
+        label: "Barangay Clearance: Validating QR code authenticity",
+        status: "info",
+      },
+      {
+        label: "Fire Safety Certificate: Checking BFP registry",
+        status: "info",
+      },
+      {
+        label: "Zoning Clearance: Awaiting classification cross-check",
+        status: "warning",
+      },
+    ],
+  },
+  {
+    refNo: "BP-2026-00150",
+    applicant: "Alfonso Mendoza",
+    businessName: "Mendoza Vulcanizing Shop",
+    type: "Renewal",
+    dateFiled: "Mar 19, 2026",
+    status: "AI Review",
+    applicantInfo: {
+      fullName: "Alfonso Mendoza",
+      philsysId: "PSN-2019-00902345",
+      contact: "0923-902-3456",
+      email: "alfonso.mendoza@email.com",
+      address: "67 Aguinaldo Ext., Brgy. Hilltop, Bagong Pag-asa",
+    },
+    businessInfo: {
+      businessName: "Mendoza Vulcanizing Shop",
+      businessType: "Sole Proprietorship",
+      businessAddress: "67 Aguinaldo Ext., Brgy. Hilltop, Bagong Pag-asa",
+      lineOfBusiness: "Automotive Services",
+      dtiSecNumber: "DTI-2022-004567",
+      capitalization: "₱120,000",
+    },
+    documents: [
+      { name: "Barangay Business Clearance", status: "uploaded" },
+      { name: "DTI/SEC/CDA Certificate of Registration", status: "uploaded" },
+      { name: "Contract of Lease or Land Title", status: "uploaded" },
+      { name: "Community Tax Certificate (Cedula)", status: "uploaded" },
+      { name: "Fire Safety Inspection Certificate", status: "uploaded" },
+      { name: "Sanitary Permit", status: "uploaded" },
+      { name: "Zoning Clearance", status: "uploaded" },
+      { name: "Previous Year's Business Permit", status: "uploaded" },
+    ],
+    aiCheck: [
+      { label: "Scanning documents... 7/8 verified", status: "info" },
+      {
+        label: "Renewal match: Comparing with 2025 permit on record",
+        status: "info",
+      },
+      {
+        label: "DTI Registration: Verifying renewal eligibility",
+        status: "info",
+      },
+      {
+        label: "Previous Permit: Flagged for expiry date validation",
+        status: "warning",
+      },
+      {
+        label: "Zoning Clearance: Awaiting this department's review",
+        status: "warning",
+      },
+    ],
+  },
+  {
+    refNo: "BP-2026-00151",
+    applicant: "Rosario Buenaventura",
+    businessName: "Buenaventura Catering",
+    type: "New",
+    dateFiled: "Mar 20, 2026",
+    status: "AI Review",
+    applicantInfo: {
+      fullName: "Rosario Buenaventura",
+      philsysId: "PSN-2021-01013456",
+      contact: "0924-013-4567",
+      email: "rosario.buenaventura@email.com",
+      address: "90 Rizal Blvd., Brgy. Poblacion, Bagong Pag-asa",
+    },
+    businessInfo: {
+      businessName: "Buenaventura Catering",
+      businessType: "Sole Proprietorship",
+      businessAddress: "90 Rizal Blvd., Brgy. Poblacion, Bagong Pag-asa",
+      lineOfBusiness: "Food & Beverage",
+      dtiSecNumber: "DTI-2026-013456",
+      capitalization: "₱420,000",
+    },
+    documents: [
+      { name: "Barangay Business Clearance", status: "uploaded" },
+      { name: "DTI/SEC/CDA Certificate of Registration", status: "uploaded" },
+      { name: "Contract of Lease or Land Title", status: "uploaded" },
+      { name: "Community Tax Certificate (Cedula)", status: "uploaded" },
+      { name: "Fire Safety Inspection Certificate", status: "uploaded" },
+      { name: "Sanitary Permit", status: "uploaded" },
+      { name: "Zoning Clearance", status: "uploaded" },
+      { name: "Previous Year's Business Permit", status: "na" },
+    ],
+    aiCheck: [
+      { label: "Scanning documents... 5/7 verified", status: "info" },
+      {
+        label: "DTI Registration: Number format valid, awaiting registry check",
+        status: "info",
+      },
+      {
+        label: "Sanitary Permit: Parsing MHO certificate — in progress",
+        status: "info",
+      },
+      {
+        label: "Barangay Clearance: Signature verification in progress",
+        status: "info",
+      },
+      {
+        label: "Fire Safety Certificate: Awaiting BFP Pag-asa confirmation",
+        status: "warning",
+      },
     ],
   },
   {
@@ -227,10 +425,22 @@ export const applications: Application[] = [
     ],
     aiCheck: [
       { label: "All required documents detected", status: "pass" },
-      { label: "DTI Registration: Valid format, number matches records", status: "pass" },
-      { label: "Barangay Clearance: Current year, correct barangay", status: "pass" },
-      { label: "Zoning Clearance: Awaiting this department's review", status: "warning" },
-      { label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa", status: "pass" },
+      {
+        label: "DTI Registration: Valid format, number matches records",
+        status: "pass",
+      },
+      {
+        label: "Barangay Clearance: Current year, correct barangay",
+        status: "pass",
+      },
+      {
+        label: "Zoning Clearance: Awaiting this department's review",
+        status: "warning",
+      },
+      {
+        label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa",
+        status: "pass",
+      },
     ],
   },
   {
@@ -267,27 +477,87 @@ export const applications: Application[] = [
     ],
     aiCheck: [
       { label: "All required documents detected", status: "pass" },
-      { label: "DTI Registration: Valid format, number matches records", status: "pass" },
-      { label: "Barangay Clearance: Current year, correct barangay", status: "pass" },
-      { label: "Zoning Clearance: Awaiting this department's review", status: "warning" },
-      { label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa", status: "pass" },
+      {
+        label: "DTI Registration: Valid format, number matches records",
+        status: "pass",
+      },
+      {
+        label: "Barangay Clearance: Current year, correct barangay",
+        status: "pass",
+      },
+      {
+        label: "Zoning Clearance: Awaiting this department's review",
+        status: "warning",
+      },
+      {
+        label: "Fire Safety Certificate: Valid, issued by BFP Pag-asa",
+        status: "pass",
+      },
     ],
   },
 ];
 
 export const trackingTimeline = [
-  { step: "Application Submitted", department: "System", status: "completed" as const, date: "Mar 18, 2026" },
-  { step: "Barangay Clearance Verification", department: "Barangay Hall", status: "completed" as const, date: "Mar 18, 2026" },
-  { step: "Fire Safety Inspection", department: "BFP", status: "completed" as const, date: "Mar 19, 2026" },
-  { step: "Sanitary/Health Clearance", department: "Municipal Health Office", status: "completed" as const, date: "Mar 19, 2026" },
-  { step: "Zoning Compliance Check", department: "Zoning Office", status: "in-review" as const, date: "Mar 19, 2026" },
-  { step: "Business Permit Assessment", department: "BPLO", status: "pending" as const, date: "—" },
-  { step: "Treasury Payment", department: "Treasury", status: "pending" as const, date: "—" },
+  {
+    step: "Application Submitted",
+    department: "System",
+    status: "completed" as const,
+    date: "Mar 18, 2026",
+  },
+  {
+    step: "Barangay Clearance Verification",
+    department: "Barangay Hall",
+    status: "completed" as const,
+    date: "Mar 18, 2026",
+  },
+  {
+    step: "Fire Safety Inspection",
+    department: "BFP",
+    status: "completed" as const,
+    date: "Mar 19, 2026",
+  },
+  {
+    step: "Sanitary/Health Clearance",
+    department: "Municipal Health Office",
+    status: "completed" as const,
+    date: "Mar 19, 2026",
+  },
+  {
+    step: "Zoning Compliance Check",
+    department: "Zoning Office",
+    status: "in-review" as const,
+    date: "Mar 19, 2026",
+  },
+  {
+    step: "Business Permit Assessment",
+    department: "BPLO",
+    status: "pending" as const,
+    date: "—",
+  },
+  {
+    step: "Treasury Payment",
+    department: "Treasury",
+    status: "pending" as const,
+    date: "—",
+  },
 ];
 
 export const smsNotifications = [
-  { time: "Mar 18, 10:23 AM", message: "Your business permit application BP-2026-00147 has been received. Estimated processing: 1-3 business days." },
-  { time: "Mar 18, 2:15 PM", message: "Barangay clearance verified for BP-2026-00147." },
-  { time: "Mar 19, 9:41 AM", message: "BFP fire safety inspection cleared for BP-2026-00147." },
-  { time: "Mar 19, 11:02 AM", message: "Health/Sanitary clearance approved for BP-2026-00147." },
+  {
+    time: "Mar 18, 10:23 AM",
+    message:
+      "Your business permit application BP-2026-00147 has been received. Estimated processing: 1-3 business days.",
+  },
+  {
+    time: "Mar 18, 2:15 PM",
+    message: "Barangay clearance verified for BP-2026-00147.",
+  },
+  {
+    time: "Mar 19, 9:41 AM",
+    message: "BFP fire safety inspection cleared for BP-2026-00147.",
+  },
+  {
+    time: "Mar 19, 11:02 AM",
+    message: "Health/Sanitary clearance approved for BP-2026-00147.",
+  },
 ];

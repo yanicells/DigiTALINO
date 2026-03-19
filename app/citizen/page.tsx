@@ -47,7 +47,7 @@ export default function CitizenPortal() {
   const [activeTab, setActiveTab] = useState<"apply" | "track">("apply");
   const [currentStep, setCurrentStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [consent, setConsent] = useState(false);
+  const [consent, setConsent] = useState(true);
   const [trackRef, setTrackRef] = useState("BP-2026-00147");
   const [showTracking, setShowTracking] = useState(false);
 
@@ -391,7 +391,7 @@ export default function CitizenPortal() {
                       <div key={i} className="flex gap-4">
                         <div className="flex flex-col items-center">
                           <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                            className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                               item.status === "completed"
                                 ? "bg-accent-green text-white"
                                 : item.status === "in-review"
@@ -509,7 +509,7 @@ function ReviewSection({
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex">
-      <span className="text-xs text-text-muted w-36 flex-shrink-0">{label}</span>
+      <span className="text-xs text-text-muted w-36 shrink-0">{label}</span>
       <span className="text-sm text-text-primary">{value}</span>
     </div>
   );

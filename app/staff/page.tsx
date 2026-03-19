@@ -11,6 +11,8 @@ import {
   AlertTriangle,
   ClipboardCheck,
   X,
+  Bot,
+  Loader2,
 } from "lucide-react";
 
 export default function StaffPortal() {
@@ -127,6 +129,14 @@ export default function StaffPortal() {
                         <ClipboardCheck size={12} />
                         Review
                       </button>
+                    ) : app.status === "AI Review" ? (
+                      <button
+                        onClick={() => setSelected(app)}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-violet-600 border border-violet-200 rounded hover:bg-violet-50 transition-colors"
+                      >
+                        <Loader2 size={12} className="animate-spin" />
+                        Processing
+                      </button>
                     ) : (
                       <button
                         onClick={() => setSelected(app)}
@@ -211,17 +221,27 @@ export default function StaffPortal() {
 
               {/* AI Pre-Check */}
               <DetailSection title="AI Document Pre-Check Results">
+                {selected.status === "AI Review" && (
+                  <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-violet-50 border border-violet-100 rounded">
+                    <Loader2 size={13} className="text-violet-500 animate-spin shrink-0" />
+                    <span className="text-xs text-violet-700 font-medium">
+                      AI scanner in progress — cross-referencing against government registries
+                    </span>
+                  </div>
+                )}
                 <div className="space-y-2">
                   {selected.aiCheck.map((check, i) => (
                     <div key={i} className="flex items-start gap-2 text-sm">
                       {check.status === "pass" ? (
-                        <CheckCircle2 size={16} className="text-accent-green mt-0.5 flex-shrink-0" />
+                        <CheckCircle2 size={16} className="text-accent-green mt-0.5 shrink-0" />
                       ) : check.status === "warning" ? (
-                        <AlertTriangle size={16} className="text-accent-amber mt-0.5 flex-shrink-0" />
+                        <AlertTriangle size={16} className="text-accent-amber mt-0.5 shrink-0" />
                       ) : (
-                        <FileText size={16} className="text-primary mt-0.5 flex-shrink-0" />
+                        <Loader2 size={16} className="text-violet-400 mt-0.5 shrink-0 animate-spin" />
                       )}
-                      <span className="text-text-primary">{check.label}</span>
+                      <span className={check.status === "info" ? "text-text-secondary" : "text-text-primary"}>
+                        {check.label}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -309,6 +329,13 @@ function AppStatusBadge({
           In Review
         </span>
       );
+    case "AI Review":
+      return (
+        <span className="inline-flex items-center gap-1 text-xs font-medium text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
+          <Bot size={12} />
+          AI Review
+        </span>
+      );
   }
 }
 
@@ -332,7 +359,7 @@ function DetailSection({
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex text-sm py-1">
-      <span className="text-text-muted w-28 flex-shrink-0">{label}</span>
+      <span className="text-text-muted w-28 shrink-0">{label}</span>
       <span className="text-text-primary">{value}</span>
     </div>
   );
