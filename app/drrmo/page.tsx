@@ -1,0 +1,322 @@
+"use client";
+
+import { useState, useEffect, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
+import { sensors as initialSensors } from "@/data/sensors";
+import { smsReports } from "@/data/sms-reports";
+import type { SmsReport } from "@/data/sms-reports";
+import type { Sensor } from "@/data/sensors";
+import {
+  Play,
+  RotateCcw,
+  Radio,
+  MessageSquare,
+  AlertTriangle,
+  Activity,
+} from "lucide-react";
+
+const DrrmoMap = dynamic(() => import("@/components/drrmo-map"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-surface rounded text-sm text-text-muted">
+      Loading map...
+    </div>
+  ),
+});
+
+export default function DrrmoDashboard() {
+  const [sensors, setSensors] = useState<Sensor[]>(initialSensors);
+  const [visibleReports, setVisibleReports] = useState<SmsReport[]>([]);
+  const [alertLog, setAlertLog] = useState<{ time: string; message: string; level: "info" | "warning" | "critical" }[]>([
+    { time: "14:22:00", message: "Routine monitoring: All sensors within normal range", level: "info" },
+  ]);
+  const [isRunning, setIsRunning] = useState(false);
+  const [simStep, setSimStep] = useState(0);
+  const [thresholdBreached, setThresholdBreached] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const resetSimulation = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = null;
+    setIsRunning(false);
+    setSimStep(0);
+    setVisibleReports([]);
+    setSensors(initialSensors);
+    setThresholdBreached(false);
+    setAlertLog([
+      { time: "14:22:00", message: "Routine monitoring: All sensors within normal range", level: "info" },
+    ]);
+  }, []);
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    intervalRef.current = setInterval(() => {
+      setSimStep((prev) => {
+        const next = prev + 1;
+
+        // Add SMS reports one by one
+        if (next <= smsReports.length) {
+          setVisibleReports(smsReports.slice(0, next));
+        }
+
+        // Gradually increase S-002 water level
+        if (next === 2) {
+          setSensors((prev) =>
+            prev.map((s) =>
+              s.id === "S-002" ? { ...s, waterLevel: 2.8, status: "elevated" as const } : s
+            )
+          );
+          setAlertLog((prev) => [
+            ...prev,
+            { time: "14:28:00", message: "Sensor S-002 elevated: 2.8m (threshold: 3.0m)", level: "warning" },
+          ]);
+        }
+
+        if (next === 4) {
+          setSensors((prev) =>
+            prev.map((s) =>
+              s.id === "S-002" ? { ...s, waterLevel: 2.9, status: "elevated" as const } : s
+            )
+          );
+        }
+
+        // Threshold breach at step 5
+        if (next === 5) {
+          setSensors((prev) =>
+            prev.map((s) =>
+              s.id === "S-002" ? { ...s, waterLevel: 3.0, status: "critical" as const } : s
+            )
+          );
+          setThresholdBreached(true);
+          setAlertLog((prev) => [
+            ...prev,
+            {
+              time: "14:31:00",
+              message: "THRESHOLD BREACHED: S-002 at 3.0m — Bulk SMS dispatched to 2,847 registered residents in Barangay Riverside",
+              level: "critical",
+            },
+          ]);
+        }
+
+        // Stop simulation after all reports
+        if (next >= smsReports.length + 1) {
+          setIsRunning(false);
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+
+        return next;
+      });
+    }, 3500);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
+  }, [isRunning]);
+
+  return (
+    <div className="min-h-full">
+      {/* Threshold Breach Banner */}
+      {thresholdBreached && (
+        <div className="px-8 py-3 bg-accent-red text-white flex items-center gap-3">
+          <AlertTriangle size={18} />
+          <span className="text-sm font-medium">
+            FLOOD THRESHOLD BREACHED — Sensor S-002 (Riverside Canal) — Automated SMS alert dispatched to Barangay Riverside residents
+          </span>
+        </div>
+      )}
+
+      <div className="px-8 py-6 border-b border-border bg-white">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-semibold text-text-primary">
+              DRRMO Dashboard
+            </h1>
+            <p className="text-sm text-text-secondary mt-1">
+              Disaster Risk Reduction & Management Office — Real-time Monitoring
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsRunning(true)}
+              disabled={isRunning || simStep > 0}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-white rounded hover:bg-primary-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Play size={14} />
+              Start Simulation
+            </button>
+            <button
+              onClick={resetSimulation}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border border-border text-text-primary rounded hover:bg-surface transition-colors"
+            >
+              <RotateCcw size={14} />
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-8">
+        <div className="flex gap-6" style={{ height: "calc(100vh - 200px)" }}>
+          {/* Left: Map */}
+          <div className="flex-[3] min-w-0">
+            <div className="bg-white border border-border rounded h-full overflow-hidden">
+              <DrrmoMap sensors={sensors} visibleReports={visibleReports} />
+            </div>
+          </div>
+
+          {/* Right: Panel */}
+          <div className="flex-[2] flex flex-col gap-4 overflow-y-auto min-w-[340px]">
+            {/* Sensor Readings */}
+            <div className="bg-white border border-border rounded">
+              <div className="px-4 py-3 border-b border-border">
+                <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                  <Activity size={14} />
+                  Flood Sensor Readings
+                </h2>
+              </div>
+              <div className="divide-y divide-border">
+                {sensors.map((sensor) => {
+                  const pct = (sensor.waterLevel / sensor.threshold) * 100;
+                  const isBreached = sensor.waterLevel >= sensor.threshold;
+                  return (
+                    <div
+                      key={sensor.id}
+                      className={`px-4 py-3 ${isBreached ? "bg-accent-red/5" : ""}`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="text-xs font-medium text-text-primary">
+                          {sensor.id} — {sensor.location}
+                        </div>
+                        <SensorStatusBadge status={sensor.status} />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-2 bg-surface rounded overflow-hidden">
+                          <div
+                            className={`h-full rounded transition-all duration-500 ${
+                              isBreached
+                                ? "bg-accent-red"
+                                : sensor.status === "elevated"
+                                ? "bg-accent-amber"
+                                : "bg-accent-green"
+                            }`}
+                            style={{ width: `${Math.min(pct, 100)}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-text-secondary whitespace-nowrap font-mono">
+                          {sensor.waterLevel.toFixed(1)}m / {sensor.threshold.toFixed(1)}m
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* SMS Feed */}
+            <div className="bg-white border border-border rounded flex-1 flex flex-col min-h-0">
+              <div className="px-4 py-3 border-b border-border flex-shrink-0">
+                <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                  <MessageSquare size={14} />
+                  Live SMS Report Feed
+                  {visibleReports.length > 0 && (
+                    <span className="text-xs font-normal text-text-muted">
+                      ({visibleReports.length}/{smsReports.length})
+                    </span>
+                  )}
+                </h2>
+              </div>
+              <div className="flex-1 overflow-y-auto divide-y divide-border">
+                {visibleReports.length === 0 ? (
+                  <div className="px-4 py-8 text-center text-sm text-text-muted">
+                    Start the simulation to see incoming SMS reports
+                  </div>
+                ) : (
+                  [...visibleReports].reverse().map((report) => (
+                    <div key={report.id} className="px-4 py-3">
+                      <div className="text-xs text-text-muted mb-1">
+                        {report.timestamp}
+                      </div>
+                      <div className="text-sm text-text-secondary italic mb-2">
+                        &ldquo;{report.sms}&rdquo;
+                      </div>
+                      <div className="flex flex-wrap gap-2 text-[11px]">
+                        <span className="px-1.5 py-0.5 rounded bg-surface text-text-secondary">
+                          {report.nlp.hazard}
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded bg-surface text-text-secondary">
+                          {report.nlp.location}
+                        </span>
+                        <UrgencyBadge urgency={report.nlp.urgency} />
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Alert Log */}
+            <div className="bg-white border border-border rounded">
+              <div className="px-4 py-3 border-b border-border">
+                <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                  <Radio size={14} />
+                  Alert Log
+                </h2>
+              </div>
+              <div className="divide-y divide-border max-h-48 overflow-y-auto">
+                {[...alertLog].reverse().map((entry, i) => (
+                  <div
+                    key={i}
+                    className={`px-4 py-2 text-xs ${
+                      entry.level === "critical"
+                        ? "bg-accent-red/5 text-accent-red"
+                        : entry.level === "warning"
+                        ? "text-accent-amber"
+                        : "text-text-secondary"
+                    }`}
+                  >
+                    <span className="font-mono font-medium">{entry.time}</span>
+                    {" — "}
+                    {entry.level === "critical" && "🚨 "}
+                    {entry.level === "warning" && "⚠️ "}
+                    {entry.message}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SensorStatusBadge({ status }: { status: Sensor["status"] }) {
+  const config = {
+    normal: { label: "Normal", color: "text-accent-green bg-accent-green/10", dot: "bg-accent-green" },
+    elevated: { label: "Elevated", color: "text-accent-amber bg-accent-amber/10", dot: "bg-accent-amber" },
+    critical: { label: "Critical", color: "text-accent-red bg-accent-red/10", dot: "bg-accent-red" },
+  };
+  const c = config[status];
+  return (
+    <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded ${c.color}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
+      {c.label}
+    </span>
+  );
+}
+
+function UrgencyBadge({ urgency }: { urgency: SmsReport["nlp"]["urgency"] }) {
+  const config = {
+    Critical: "bg-accent-red/10 text-accent-red",
+    Moderate: "bg-accent-amber/10 text-accent-amber",
+    Low: "bg-yellow-100 text-yellow-700",
+  };
+  return (
+    <span className={`px-1.5 py-0.5 rounded font-medium ${config[urgency]}`}>
+      {urgency}
+    </span>
+  );
+}
