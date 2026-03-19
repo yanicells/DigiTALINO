@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DigiTALINO
 
-## Getting Started
+**Demo Project | IM Summit 2026 Case Submission**
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+DigiTALINO is a proposed Master Data Management (MDM) system designed to modernize governance operations in Bagong Pag-asa, a first-class municipality in the Philippines serving 150,000 residents.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## The Solution
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Core Components:**
+- **Master Data Management (MDM)** platform that centralizes citizen information, government service records, and disaster risk data across LGU departments
+- **Hybrid Database Architecture** with on-premises local servers and cloud disaster recovery
+- **eGovPH API Integration** enabling synchronization with national e-government platforms
+- **IoT Flood Sensors** for real-time disaster monitoring and early warning systems
+- **SMS-Based Alerts** for citizen notifications and disaster warnings (including offline access)
+- **NLP Pipeline** for processing incoming SMS reports to extract location, hazard type, and urgency indicators
+- **Role-Based Access Control** with Zero Trust security principles and Data Privacy Act compliance
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Key Outcomes
 
-## Learn More
+- Reduce business permit processing from 10–15 days to 1–3 business days
+- Eliminate data silos across Treasury, Health Office, and Social Welfare departments
+- Improve disaster response coverage through digital mapping and real-time alerts
+- Strengthen governance transparency and reduce corruption risks
+- Support digital inclusion with SMS-based services for underserved communities
 
-To learn more about Next.js, take a look at the following resources:
+## Implementation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Three-year phased rollout aligned with the current administration's term:
+- **Phase I:** Foundation (stakeholder engagement, MDM integration, data governance)
+- **Phase II:** Smart Features (dashboards, IoT flood sensors, SMS alert system)
+- **Phase III:** AI & Analytics (predictive analytics, disaster forecasting)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*This is a demonstration case proposal for the IM Summit 2026 business case competition, organized by Ateneo MISA with Cisco as the case presenter.*
