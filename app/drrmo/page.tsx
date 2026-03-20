@@ -253,14 +253,14 @@ export default function DrrmoDashboard() {
           {/* Right: Panel */}
           <div className="flex-2 flex flex-col gap-4 min-w-0 lg:min-w-72 lg:h-full overflow-hidden">
             {/* Sensor Readings */}
-            <div className="bg-white border border-border rounded shrink-0">
+            <div className="bg-white border border-border rounded shrink-0 flex flex-col h-75 overflow-hidden">
               <div className="px-4 py-3 border-b border-border">
                 <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <Activity size={14} />
                   Flood Sensor Readings
                 </h2>
               </div>
-              <div className="divide-y divide-border">
+              <div className="flex-1 min-h-0 divide-y divide-border overflow-y-auto hide-scrollbar">
                 {sensors.map((sensor) => {
                   const pct = (sensor.waterLevel / sensor.threshold) * 100;
                   const isBreached = sensor.waterLevel >= sensor.threshold;
@@ -300,7 +300,7 @@ export default function DrrmoDashboard() {
             </div>
 
             {/* SMS Feed */}
-            <div className="bg-white border border-border rounded flex-1 flex flex-col min-h-0 overflow-hidden">
+            <div className="bg-white border border-border rounded shrink-0 flex flex-col h-44 min-w-0 overflow-hidden">
               <div className="px-4 py-3 border-b border-border shrink-0">
                 <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <MessageSquare size={14} />
@@ -342,14 +342,14 @@ export default function DrrmoDashboard() {
             </div>
 
             {/* Alert Log */}
-            <div className="bg-white border border-border rounded shrink-0 overflow-hidden">
+            <div className="bg-white border border-border rounded shrink-0 flex flex-col h-36 overflow-hidden">
               <div className="px-4 py-3 border-b border-border">
                 <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <Radio size={14} />
                   Alert Log
                 </h2>
               </div>
-              <div className="divide-y divide-border max-h-36 sm:max-h-40 overflow-y-auto hide-scrollbar">
+              <div className="flex-1 min-h-0 divide-y divide-border overflow-y-auto hide-scrollbar">
                 {[...alertLog].reverse().map((entry, i) => (
                   <div
                     key={i}
