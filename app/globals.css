@@ -33,3 +33,26 @@ body {
 .leaflet-popup-pane {
   z-index: 20 !important;
 }
+
+/* Hide scrollbar UI while preserving scroll behavior. */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Keep map and side panels visually balanced in DRRMO desktop layout. */
+@media (min-width: 1024px) {
+  .drrmo-column-height {
+    height: min(680px, calc(100vh - 220px));
+  }
+}
+
+@media (max-width: 1023px) {
+  .drrmo-map-height {
+    height: clamp(320px, 62vh, 560px);
+  }
+}

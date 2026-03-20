@@ -57,6 +57,7 @@ function buildFullPopup(report: SmsReport): string {
 export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const sensorMarkerRef = useRef<Map<string, L.CircleMarker>>(new Map());
   const markerMapRef = useRef<Map<number, L.CircleMarker>>(new Map());
   const prevCountRef = useRef(0);
   const autoCloseTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -95,6 +96,8 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
         </div>`
       );
 
+      sensorMarkerRef.current.set(sensor.id, marker);
+
       L.marker([sensor.lat, sensor.lng], {
         icon: L.divIcon({
           className: "",
@@ -106,13 +109,63 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
 
     mapRef.current = map;
 
+    // Ensure proper render after mount/layout settles.
+    requestAnimationFrame(() => {
+      map.invalidateSize();
+    });
+
     return () => {
       if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
+      sensorMarkerRef.current.clear();
       map.remove();
       mapRef.current = null;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Keep map size in sync with container resizes.
+  useEffect(() => {
+    if (!containerRef.current || !mapRef.current) return;
+
+    const map = mapRef.current;
+    const observer = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Sync sensor pins when readings/status update during simulation.
+  useEffect(() => {
+    const markerMap = sensorMarkerRef.current;
+    if (!markerMap.size) return;
+
+    sensors.forEach((sensor) => {
+      const marker = markerMap.get(sensor.id);
+      if (!marker) return;
+
+      const color =
+        sensor.status === "critical"
+          ? "#dc2626"
+          : sensor.status === "elevated"
+          ? "#f59e0b"
+          : "#2563eb";
+
+      marker.setStyle({
+        fillColor: color,
+        color,
+      });
+      marker.setLatLng([sensor.lat, sensor.lng]);
+      marker.bindPopup(
+        `<div style="font-family:system-ui;font-size:12px;">
+          <strong>${sensor.id}</strong><br/>
+          ${sensor.location}<br/>
+          Water Level: ${sensor.waterLevel.toFixed(1)}m / ${sensor.threshold.toFixed(1)}m
+        </div>`
+      );
+    });
+  }, [sensors]);
 
   // Sync report markers — add new ones incrementally, don't rebuild all
   useEffect(() => {
@@ -186,7 +239,6 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
     <div
       ref={containerRef}
       className="w-full h-full rounded"
-      style={{ minHeight: "500px" }}
     />
   );
 }

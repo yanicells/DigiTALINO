@@ -20,7 +20,7 @@ const metricIcons = [TrendingUp, Clock, ThumbsUp, AlertTriangle];
 export default function MayorDashboard() {
   return (
     <div className="min-h-full">
-      <div className="px-8 py-6 border-b border-border bg-white">
+      <div className="px-4 sm:px-8 py-6 border-b border-border bg-white">
         <h1 className="text-xl font-semibold text-text-primary">
           Executive Dashboard
         </h1>
@@ -29,9 +29,9 @@ export default function MayorDashboard() {
         </p>
       </div>
 
-      <div className="p-8 space-y-6">
+      <div className="p-4 sm:p-8 space-y-6">
         {/* Top Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {topMetrics.map((metric, i) => {
             const Icon = metricIcons[i];
             return (
@@ -62,80 +62,84 @@ export default function MayorDashboard() {
               e-Services Performance
             </h2>
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Simple bar visualization */}
-            <div className="grid grid-cols-6 gap-3 mb-6">
-              {departmentPerformance.map((dept) => (
-                <div key={dept.department} className="text-center">
-                  <div className="h-32 flex flex-col justify-end items-center mb-2">
-                    <div
-                      className="w-10 bg-primary/80 rounded-t"
-                      style={{
-                        height: `${(dept.completed / 100) * 100}%`,
-                      }}
-                    />
+            <div className="overflow-x-auto mb-6">
+              <div className="grid grid-cols-6 gap-3 min-w-155">
+                {departmentPerformance.map((dept) => (
+                  <div key={dept.department} className="text-center">
+                    <div className="h-32 flex flex-col justify-end items-center mb-2">
+                      <div
+                        className="w-10 bg-primary/80 rounded-t"
+                        style={{
+                          height: `${(dept.completed / 100) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <div className="text-[10px] text-text-muted leading-tight">
+                      {dept.department}
+                    </div>
+                    <div className="text-xs font-semibold text-text-primary">
+                      {dept.completed}
+                    </div>
                   </div>
-                  <div className="text-[10px] text-text-muted leading-tight">
-                    {dept.department}
-                  </div>
-                  <div className="text-xs font-semibold text-text-primary">
-                    {dept.completed}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             {/* Department Table */}
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
-                    Department
-                  </th>
-                  <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
-                    Pending
-                  </th>
-                  <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
-                    Completed
-                  </th>
-                  <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
-                    Avg. Time
-                  </th>
-                  <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
-                    Bottleneck
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {departmentPerformance.map((dept) => (
-                  <tr
-                    key={dept.department}
-                    className="border-b border-border last:border-0"
-                  >
-                    <td className="py-2 px-3 font-medium">{dept.department}</td>
-                    <td className="py-2 px-3 text-text-secondary">
-                      {dept.pending}
-                    </td>
-                    <td className="py-2 px-3 text-text-secondary">
-                      {dept.completed}
-                    </td>
-                    <td className="py-2 px-3 text-text-secondary">
-                      {dept.avgTime}
-                    </td>
-                    <td className="py-2 px-3">
-                      {dept.bottleneck ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-accent-amber font-medium">
-                          <AlertTriangle size={12} />
-                          High pending
-                        </span>
-                      ) : (
-                        <span className="text-xs text-text-muted">—</span>
-                      )}
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-170 text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
+                      Department
+                    </th>
+                    <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
+                      Pending
+                    </th>
+                    <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
+                      Completed
+                    </th>
+                    <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
+                      Avg. Time
+                    </th>
+                    <th className="text-left py-2 px-3 text-xs font-medium text-text-muted uppercase tracking-wide">
+                      Bottleneck
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {departmentPerformance.map((dept) => (
+                    <tr
+                      key={dept.department}
+                      className="border-b border-border last:border-0"
+                    >
+                      <td className="py-2 px-3 font-medium">{dept.department}</td>
+                      <td className="py-2 px-3 text-text-secondary">
+                        {dept.pending}
+                      </td>
+                      <td className="py-2 px-3 text-text-secondary">
+                        {dept.completed}
+                      </td>
+                      <td className="py-2 px-3 text-text-secondary">
+                        {dept.avgTime}
+                      </td>
+                      <td className="py-2 px-3">
+                        {dept.bottleneck ? (
+                          <span className="inline-flex items-center gap-1 text-xs text-accent-amber font-medium whitespace-nowrap">
+                            <AlertTriangle size={12} />
+                            High pending
+                          </span>
+                        ) : (
+                          <span className="text-xs text-text-muted">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -205,7 +209,7 @@ export default function MayorDashboard() {
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between text-sm">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-sm">
       <span className="text-text-secondary">{label}</span>
       <span className="font-medium text-text-primary">{value}</span>
     </div>

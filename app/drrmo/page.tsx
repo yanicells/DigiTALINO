@@ -135,7 +135,7 @@ export default function DrrmoDashboard() {
     <div className="min-h-full">
       {/* Yellow Elevated Warning Banner */}
       {yellowWarning && !thresholdBreached && (
-        <div className="px-8 py-3 bg-accent-amber text-white flex items-center gap-3">
+        <div className="px-4 sm:px-8 py-3 bg-accent-amber text-white flex items-center gap-3">
           <AlertTriangle size={18} />
           <span className="text-sm font-medium">
             ELEVATED WATER LEVEL — Sensor S-002 (Riverside Canal) approaching flood threshold — DRRMO teams on standby, evacuation advisory issued
@@ -145,7 +145,7 @@ export default function DrrmoDashboard() {
 
       {/* Red Threshold Breach Banner */}
       {thresholdBreached && (
-        <div className="px-8 py-3 bg-accent-red text-white flex items-center gap-3">
+        <div className="px-4 sm:px-8 py-3 bg-accent-red text-white flex items-center gap-3">
           <AlertTriangle size={18} />
           <span className="text-sm font-medium">
             FLOOD THRESHOLD BREACHED — Sensor S-002 (Riverside Canal) — Automated SMS alert dispatched to Barangay Riverside residents
@@ -184,18 +184,18 @@ export default function DrrmoDashboard() {
       </div>
 
       <div className="p-4 sm:p-8">
-        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6" style={{ minHeight: "calc(100vh - 200px)" }}>
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:h-[calc(100vh-220px)]">
           {/* Left: Map */}
-          <div className="flex-3 min-w-0" style={{ height: "clamp(320px, 50vw, 600px)" }}>
+          <div className="flex-3 min-w-0 lg:h-full drrmo-map-height">
             <div className="bg-white border border-border rounded h-full overflow-hidden" style={{ isolation: "isolate" }}>
               <DrrmoMap sensors={sensors} visibleReports={visibleReports} />
             </div>
           </div>
 
           {/* Right: Panel */}
-          <div className="flex-2 flex flex-col gap-4 lg:overflow-y-auto min-w-0 lg:min-w-72">
+          <div className="flex-2 flex flex-col gap-4 min-w-0 lg:min-w-72 lg:h-full overflow-hidden">
             {/* Sensor Readings */}
-            <div className="bg-white border border-border rounded">
+            <div className="bg-white border border-border rounded shrink-0">
               <div className="px-4 py-3 border-b border-border">
                 <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <Activity size={14} />
@@ -241,7 +241,7 @@ export default function DrrmoDashboard() {
             </div>
 
             {/* SMS Feed */}
-            <div className="bg-white border border-border rounded flex-1 flex flex-col min-h-0">
+            <div className="bg-white border border-border rounded flex-1 flex flex-col min-h-0 overflow-hidden">
               <div className="px-4 py-3 border-b border-border shrink-0">
                 <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <MessageSquare size={14} />
@@ -253,7 +253,7 @@ export default function DrrmoDashboard() {
                   )}
                 </h2>
               </div>
-              <div className="flex-1 overflow-y-auto divide-y divide-border">
+              <div className="flex-1 min-h-0 overflow-y-auto hide-scrollbar divide-y divide-border">
                 {visibleReports.length === 0 ? (
                   <div className="px-4 py-8 text-center text-sm text-text-muted">
                     Start the simulation to see incoming SMS reports
@@ -283,14 +283,14 @@ export default function DrrmoDashboard() {
             </div>
 
             {/* Alert Log */}
-            <div className="bg-white border border-border rounded">
+            <div className="bg-white border border-border rounded shrink-0">
               <div className="px-4 py-3 border-b border-border">
                 <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <Radio size={14} />
                   Alert Log
                 </h2>
               </div>
-              <div className="divide-y divide-border max-h-48 overflow-y-auto">
+              <div className="divide-y divide-border max-h-48 overflow-y-auto hide-scrollbar">
                 {[...alertLog].reverse().map((entry, i) => (
                   <div
                     key={i}

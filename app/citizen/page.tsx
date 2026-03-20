@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FileText,
   Search,
@@ -50,6 +50,7 @@ export default function CitizenPortal() {
   const [consent, setConsent] = useState(true);
   const [trackRef, setTrackRef] = useState("BP-2026-00147");
   const [showTracking, setShowTracking] = useState(false);
+  const stepRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const [form, setForm] = useState({
     fullName: "Juan Dela Cruz",
@@ -65,6 +66,20 @@ export default function CitizenPortal() {
     capitalization: "350000",
   });
 
+  useEffect(() => {
+    const activeStepButton = stepRefs.current[currentStep];
+    if (!activeStepButton) return;
+
+    activeStepButton.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [currentStep]);
+
+  const isFirstStep = currentStep === 0;
+  const isLastStep = currentStep === 3;
+
   return (
     <div className="min-h-full">
       <div className="px-4 sm:px-8 py-6 border-b border-border bg-white">
@@ -77,8 +92,8 @@ export default function CitizenPortal() {
       </div>
 
       {/* Tabs */}
-      <div className="px-4 sm:px-8 bg-white border-b border-border overflow-x-auto">
-        <div className="flex gap-0">
+      <div className="px-4 sm:px-8 bg-white border-b border-border overflow-x-auto hide-scrollbar">
+        <div className="flex gap-0 min-w-max">
           <button
             onClick={() => setActiveTab("apply")}
             className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
@@ -108,16 +123,19 @@ export default function CitizenPortal() {
         </div>
       </div>
 
-      <div className="p-4 sm:p-8 max-w-4xl">
+      <div className="p-4 sm:p-8 max-w-4xl mx-auto">
         {activeTab === "apply" && !submitted && (
           <>
             {/* Stepper - scrollable on mobile */}
-            <div className="flex items-center gap-1.5 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto pb-1 -mx-1 px-1">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto hide-scrollbar pb-1 -mx-1 px-1">
               {steps.map((label, i) => (
                 <div key={label} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                   <button
+                    ref={(el) => {
+                      stepRefs.current[i] = el;
+                    }}
                     onClick={() => setCurrentStep(i)}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-colors whitespace-nowrap ${
                       i === currentStep
                         ? "bg-primary text-white"
                         : i < currentStep
@@ -139,7 +157,7 @@ export default function CitizenPortal() {
 
             {/* Step 1: Applicant Info */}
             {currentStep === 0 && (
-              <div className="bg-white border border-border rounded p-6">
+              <div className="bg-white border border-border rounded p-4 sm:p-6">
                 <h2 className="font-semibold text-text-primary mb-4">
                   Applicant Information
                 </h2>
@@ -148,7 +166,7 @@ export default function CitizenPortal() {
                   <Field label="PhilSys / eGovPH ID" value={form.philsysId} onChange={(v) => setForm({ ...form, philsysId: v })} />
                   <Field label="Contact Number" value={form.contact} onChange={(v) => setForm({ ...form, contact: v })} />
                   <Field label="Email Address" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
-                  <div className="col-span-2">
+                  <div className="sm:col-span-2">
                     <Field label="Address" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
                   </div>
                 </div>
@@ -157,7 +175,7 @@ export default function CitizenPortal() {
 
             {/* Step 2: Business Info */}
             {currentStep === 1 && (
-              <div className="bg-white border border-border rounded p-6">
+              <div className="bg-white border border-border rounded p-4 sm:p-6">
                 <h2 className="font-semibold text-text-primary mb-4">
                   Business Information
                 </h2>
@@ -177,7 +195,7 @@ export default function CitizenPortal() {
                       <option>Corporation</option>
                     </select>
                   </div>
-                  <div className="col-span-2">
+                  <div className="sm:col-span-2">
                     <Field label="Business Address" value={form.businessAddress} onChange={(v) => setForm({ ...form, businessAddress: v })} />
                   </div>
                   <div>
@@ -207,7 +225,7 @@ export default function CitizenPortal() {
 
             {/* Step 3: Documents */}
             {currentStep === 2 && (
-              <div className="bg-white border border-border rounded p-6">
+              <div className="bg-white border border-border rounded p-4 sm:p-6">
                 <h2 className="font-semibold text-text-primary mb-4">
                   Required Documents Upload
                 </h2>
@@ -215,11 +233,11 @@ export default function CitizenPortal() {
                   {documents.map((doc) => (
                     <div
                       key={doc.name}
-                      className="flex items-center justify-between px-4 py-3 border border-border rounded"
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 py-3 border border-border rounded"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-start sm:items-center gap-3 min-w-0">
                         <Upload size={16} className="text-text-muted" />
-                        <span className="text-sm text-text-primary">
+                        <span className="text-sm text-text-primary wrap-break-word">
                           {doc.name}
                         </span>
                       </div>
@@ -239,7 +257,7 @@ export default function CitizenPortal() {
 
             {/* Step 4: Review & Submit */}
             {currentStep === 3 && (
-              <div className="bg-white border border-border rounded p-6">
+              <div className="bg-white border border-border rounded p-4 sm:p-6">
                 <h2 className="font-semibold text-text-primary mb-4">
                   Review & Submit
                 </h2>
@@ -288,19 +306,28 @@ export default function CitizenPortal() {
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between mt-4">
+            <div className="grid grid-cols-2 sm:flex sm:justify-between sm:items-center gap-2 mt-4">
               <button
-                onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                disabled={currentStep === 0}
-                className="inline-flex items-center gap-1 px-4 py-2 text-sm text-text-secondary hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed"
+                onClick={() => {
+                  if (isFirstStep) return;
+                  setCurrentStep(Math.max(0, currentStep - 1));
+                }}
+                aria-disabled={isFirstStep}
+                className={`inline-flex h-11 items-center justify-center gap-1 rounded border border-border bg-white px-4 py-2 text-sm font-medium text-text-secondary transition-colors ${
+                  isLastStep ? "col-span-2 sm:col-span-1" : "col-span-1"
+                } ${
+                  isFirstStep
+                    ? "opacity-30 cursor-not-allowed"
+                    : "hover:bg-surface hover:text-text-primary"
+                }`}
               >
                 <ChevronLeft size={14} />
                 Previous
               </button>
-              {currentStep < 3 && (
+              {!isLastStep && (
                 <button
                   onClick={() => setCurrentStep(currentStep + 1)}
-                  className="inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-primary hover:text-primary-dark"
+                  className="col-span-1 inline-flex h-11 items-center justify-center gap-1 rounded bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark"
                 >
                   Next
                   <ChevronRight size={14} />
@@ -312,7 +339,7 @@ export default function CitizenPortal() {
 
         {/* Success Modal */}
         {activeTab === "apply" && submitted && (
-          <div className="bg-white border border-border rounded p-8 text-center max-w-lg mx-auto mt-8">
+            <div className="bg-white border border-border rounded p-5 sm:p-8 text-center max-w-lg mx-auto mt-8">
             <div className="w-16 h-16 rounded-full bg-accent-green/10 flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 size={32} className="text-accent-green" />
             </div>
@@ -355,7 +382,7 @@ export default function CitizenPortal() {
         {/* Track Application */}
         {activeTab === "track" && (
           <>
-            <div className="bg-white border border-border rounded p-6 mb-6">
+            <div className="bg-white border border-border rounded p-4 sm:p-6 mb-6">
               <h2 className="font-semibold text-text-primary mb-3">
                 Track Your Application
               </h2>
@@ -369,7 +396,7 @@ export default function CitizenPortal() {
                 />
                 <button
                   onClick={() => setShowTracking(true)}
-                  className="px-4 py-2 bg-primary text-white text-sm font-medium rounded hover:bg-primary-dark transition-colors"
+                  className="w-full sm:w-auto px-4 py-2 bg-primary text-white text-sm font-medium rounded hover:bg-primary-dark transition-colors"
                 >
                   Track
                 </button>
@@ -379,7 +406,7 @@ export default function CitizenPortal() {
             {showTracking && (
               <>
                 {/* Visual Timeline */}
-                <div className="bg-white border border-border rounded p-6 mb-6">
+                <div className="bg-white border border-border rounded p-4 sm:p-6 mb-6">
                   <h3 className="font-semibold text-text-primary mb-1">
                     Application Timeline
                   </h3>
@@ -388,7 +415,7 @@ export default function CitizenPortal() {
                   </p>
                   <div className="space-y-0">
                     {trackingTimeline.map((item, i) => (
-                      <div key={i} className="flex gap-4">
+                      <div key={i} className="flex gap-3 sm:gap-4">
                         <div className="flex flex-col items-center">
                           <div
                             className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
@@ -417,11 +444,11 @@ export default function CitizenPortal() {
                             />
                           )}
                         </div>
-                        <div className="pb-6">
-                          <div className="text-sm font-medium text-text-primary">
+                        <div className="pb-6 min-w-0">
+                          <div className="text-sm font-medium text-text-primary wrap-break-word">
                             {item.step}
                           </div>
-                          <div className="text-xs text-text-secondary">
+                          <div className="text-xs text-text-secondary wrap-break-word">
                             {item.department}
                           </div>
                           <div className="flex items-center gap-2 mt-1">
@@ -437,7 +464,7 @@ export default function CitizenPortal() {
                 </div>
 
                 {/* SMS Notification Log */}
-                <div className="bg-white border border-border rounded p-6">
+                <div className="bg-white border border-border rounded p-4 sm:p-6">
                   <h3 className="font-semibold text-text-primary mb-4 flex items-center gap-2">
                     <MessageSquare size={16} />
                     SMS Notifications
@@ -451,7 +478,7 @@ export default function CitizenPortal() {
                         <span className="text-xs text-text-muted font-medium shrink-0">
                           {sms.time}
                         </span>
-                        <span className="text-text-secondary">{sms.message}</span>
+                        <span className="text-text-secondary wrap-break-word">{sms.message}</span>
                       </div>
                     ))}
                   </div>
@@ -508,9 +535,9 @@ function ReviewSection({
 
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex">
-      <span className="text-xs text-text-muted w-36 shrink-0">{label}</span>
-      <span className="text-sm text-text-primary">{value}</span>
+    <div className="flex flex-col sm:flex-row sm:items-start gap-0.5 sm:gap-0">
+      <span className="text-xs text-text-muted w-auto sm:w-36 shrink-0">{label}</span>
+      <span className="text-sm text-text-primary wrap-break-word">{value}</span>
     </div>
   );
 }
