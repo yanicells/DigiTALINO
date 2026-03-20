@@ -31,7 +31,7 @@ export default function MayorDashboard() {
 
       <div className="p-8 space-y-6">
         {/* Top Metrics */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {topMetrics.map((metric, i) => {
             const Icon = metricIcons[i];
             return (
@@ -139,7 +139,7 @@ export default function MayorDashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Disaster Preparedness */}
           <div className="bg-white border border-border rounded">
             <div className="px-6 py-4 border-b border-border">

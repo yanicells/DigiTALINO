@@ -184,7 +184,7 @@ export default function DrrmoDashboard() {
       </div>
 
       <div className="p-8">
-        <div className="flex gap-6" style={{ height: "calc(100vh - 200px)" }}>
+        <div className="flex flex-col lg:flex-row gap-6" style={{ minHeight: "calc(100vh - 200px)" }}>
           {/* Left: Map */}
           <div className="flex-3 min-w-0">
             <div className="bg-white border border-border rounded h-full overflow-hidden">

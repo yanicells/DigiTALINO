@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="min-h-full">
       {/* Hero */}
-      <section className="px-8 pt-16 pb-12 max-w-5xl mx-auto text-center">
+      <section className="px-4 sm:px-8 pt-12 sm:pt-16 pb-12 max-w-5xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded bg-primary/5 border border-primary/10">
           <Building2 size={16} className="text-primary" />
           <span className="text-xs font-medium text-primary uppercase tracking-wide">
@@ -24,8 +24,8 @@ export default function Home() {
       </section>
 
       {/* Module Cards */}
-      <section className="px-8 pb-12 max-w-5xl mx-auto">
-        <div className="grid grid-cols-2 gap-6">
+      <section className="px-4 sm:px-8 pb-12 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white border border-border rounded p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded bg-primary/10 flex items-center justify-center">
@@ -72,7 +72,7 @@ export default function Home() {
               SMS reporting, and automated early warning — protecting communities
               through technology.
             </p>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/drrmo"
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-accent-red text-white rounded hover:bg-red-700 transition-colors"
@@ -80,18 +80,25 @@ export default function Home() {
                 <MapPin size={14} />
                 DRRMO Dashboard
               </Link>
+              <Link
+                href="/drrmo/report"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border border-border text-text-primary rounded hover:bg-surface transition-colors"
+              >
+                <FileText size={14} />
+                Post-Disaster Report
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* Municipality Profile */}
-      <section className="px-8 pb-12 max-w-5xl mx-auto">
+      <section className="px-4 sm:px-8 pb-12 max-w-5xl mx-auto">
         <div className="bg-white border border-border rounded p-6">
           <h3 className="font-semibold text-text-primary mb-4">
             Municipality Profile
           </h3>
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
             <div>
               <div className="text-xs text-text-muted uppercase tracking-wide mb-1">
                 Classification
@@ -133,7 +140,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="px-8 pb-8 max-w-5xl mx-auto">
+      <footer className="px-4 sm:px-8 pb-8 max-w-5xl mx-auto">
         <div className="text-center text-xs text-text-muted pt-6 border-t border-border">
           CSCI_67 — IM Summit 2026 Demo
         </div>

@@ -51,7 +51,7 @@ export default function StaffPortal() {
 
       {/* Stats */}
       <div className="px-8 py-6">
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           <StatCard label="Applications Today" value={stats.today} />
           <StatCard label="Pending Review" value={stats.pending} color="text-accent-amber" />
           <StatCard label="Approved Today" value={stats.approved} color="text-accent-green" />
@@ -67,7 +67,7 @@ export default function StaffPortal() {
         )}
 
         {/* Application Queue Table */}
-        <div className="bg-white border border-border rounded overflow-hidden">
+        <div className="bg-white border border-border rounded overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-surface">
@@ -157,7 +157,7 @@ export default function StaffPortal() {
       {/* Detail Panel */}
       {selected && (
         <div className="fixed inset-0 bg-black/20 flex justify-end z-50">
-          <div className="w-[560px] bg-white h-full overflow-y-auto shadow-lg border-l border-border">
+          <div className="w-140 bg-white h-full overflow-y-auto shadow-lg border-l border-border">
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
               <div>
                 <h2 className="font-semibold text-text-primary">
