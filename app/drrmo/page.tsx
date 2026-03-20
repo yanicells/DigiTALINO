@@ -342,14 +342,14 @@ export default function DrrmoDashboard() {
             </div>
 
             {/* Alert Log */}
-            <div className="bg-white border border-border rounded shrink-0">
+            <div className="bg-white border border-border rounded shrink-0 overflow-hidden">
               <div className="px-4 py-3 border-b border-border">
                 <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <Radio size={14} />
                   Alert Log
                 </h2>
               </div>
-              <div className="divide-y divide-border max-h-48 overflow-y-auto hide-scrollbar">
+              <div className="divide-y divide-border max-h-36 sm:max-h-40 overflow-y-auto hide-scrollbar">
                 {[...alertLog].reverse().map((entry, i) => (
                   <div
                     key={i}

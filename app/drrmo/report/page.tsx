@@ -62,12 +62,12 @@ export default function PostDisasterReport() {
       </div>
 
       <div className="p-4 sm:p-8 space-y-6 max-w-6xl">
-        {/* Event Summary Card */}
+        {/* Disaster Summary Card */}
         <div className="bg-white border border-border rounded">
           <div className="px-4 sm:px-6 py-4 border-b border-border">
             <h2 className="font-semibold text-text-primary flex items-center gap-2">
               <ShieldAlert size={16} />
-              Event Summary
+              Disaster Summary
             </h2>
           </div>
           <div className="p-4 sm:p-6">
