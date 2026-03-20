@@ -156,8 +156,14 @@ export default function StaffPortal() {
 
       {/* Detail Panel */}
       {selected && (
-        <div className="fixed inset-0 bg-black/20 flex justify-end z-50">
-          <div className="w-140 bg-white h-full overflow-y-auto shadow-lg border-l border-border">
+        <div
+          className="fixed inset-0 bg-black/20 flex justify-end z-50"
+          onClick={() => setSelected(null)}
+        >
+          <div
+            className="w-140 bg-white h-full overflow-y-auto shadow-lg border-l border-border"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
               <div>
                 <h2 className="font-semibold text-text-primary">
