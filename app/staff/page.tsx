@@ -22,20 +22,18 @@ export default function StaffPortal() {
 
   const stats = {
     today: 12,
-    pending: appList.filter((a) => a.status === "For Review" || a.status === "In Review").length,
+    pending: appList.filter(
+      (a) => a.status === "For Review" || a.status === "In Review",
+    ).length,
     approved: appList.filter((a) => a.status === "Approved").length,
     rejected: appList.filter((a) => a.status === "Rejected").length,
   };
 
   function handleAction(refNo: string, action: "Approved" | "Rejected") {
     setAppList((prev) =>
-      prev.map((a) =>
-        a.refNo === refNo ? { ...a, status: action } : a
-      )
+      prev.map((a) => (a.refNo === refNo ? { ...a, status: action } : a)),
     );
-    setActionDone(
-      `${refNo} — ${action}. SMS notification sent to applicant.`
-    );
+    setActionDone(`${refNo} — ${action}. SMS notification sent to applicant.`);
     setSelected(null);
     setTimeout(() => setActionDone(null), 4000);
   }
@@ -53,9 +51,21 @@ export default function StaffPortal() {
       <div className="px-8 py-6">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           <StatCard label="Applications Today" value={stats.today} />
-          <StatCard label="Pending Review" value={stats.pending} color="text-accent-amber" />
-          <StatCard label="Approved Today" value={stats.approved} color="text-accent-green" />
-          <StatCard label="Rejected Today" value={stats.rejected} color="text-accent-red" />
+          <StatCard
+            label="Pending Review"
+            value={stats.pending}
+            color="text-accent-amber"
+          />
+          <StatCard
+            label="Approved Today"
+            value={stats.approved}
+            color="text-accent-green"
+          />
+          <StatCard
+            label="Rejected Today"
+            value={stats.rejected}
+            color="text-accent-red"
+          />
         </div>
 
         {/* Action confirmation */}
@@ -118,7 +128,10 @@ export default function StaffPortal() {
                     {app.dateFiled}
                   </td>
                   <td className="px-4 py-3">
-                    <AppStatusBadge status={app.status} detail={app.statusDetail} />
+                    <AppStatusBadge
+                      status={app.status}
+                      detail={app.statusDetail}
+                    />
                   </td>
                   <td className="px-4 py-3">
                     {app.status === "For Review" ? (
@@ -184,21 +197,51 @@ export default function StaffPortal() {
             <div className="p-6 space-y-6">
               {/* Applicant Details */}
               <DetailSection title="Applicant Details">
-                <DetailRow label="Full Name" value={selected.applicantInfo.fullName} />
-                <DetailRow label="PhilSys ID" value={selected.applicantInfo.philsysId} />
-                <DetailRow label="Contact" value={selected.applicantInfo.contact} />
+                <DetailRow
+                  label="Full Name"
+                  value={selected.applicantInfo.fullName}
+                />
+                <DetailRow
+                  label="PhilSys ID"
+                  value={selected.applicantInfo.philsysId}
+                />
+                <DetailRow
+                  label="Contact"
+                  value={selected.applicantInfo.contact}
+                />
                 <DetailRow label="Email" value={selected.applicantInfo.email} />
-                <DetailRow label="Address" value={selected.applicantInfo.address} />
+                <DetailRow
+                  label="Address"
+                  value={selected.applicantInfo.address}
+                />
               </DetailSection>
 
               {/* Business Details */}
               <DetailSection title="Business Details">
-                <DetailRow label="Business Name" value={selected.businessInfo.businessName} />
-                <DetailRow label="Type" value={selected.businessInfo.businessType} />
-                <DetailRow label="Address" value={selected.businessInfo.businessAddress} />
-                <DetailRow label="Industry" value={selected.businessInfo.lineOfBusiness} />
-                <DetailRow label="DTI/SEC No." value={selected.businessInfo.dtiSecNumber} />
-                <DetailRow label="Capitalization" value={selected.businessInfo.capitalization} />
+                <DetailRow
+                  label="Business Name"
+                  value={selected.businessInfo.businessName}
+                />
+                <DetailRow
+                  label="Type"
+                  value={selected.businessInfo.businessType}
+                />
+                <DetailRow
+                  label="Address"
+                  value={selected.businessInfo.businessAddress}
+                />
+                <DetailRow
+                  label="Industry"
+                  value={selected.businessInfo.lineOfBusiness}
+                />
+                <DetailRow
+                  label="DTI/SEC No."
+                  value={selected.businessInfo.dtiSecNumber}
+                />
+                <DetailRow
+                  label="Capitalization"
+                  value={selected.businessInfo.capitalization}
+                />
               </DetailSection>
 
               {/* Documents */}
@@ -229,9 +272,13 @@ export default function StaffPortal() {
               <DetailSection title="AI Document Pre-Check Results">
                 {selected.status === "AI Review" && (
                   <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-violet-50 border border-violet-100 rounded">
-                    <Loader2 size={13} className="text-violet-500 animate-spin shrink-0" />
+                    <Loader2
+                      size={13}
+                      className="text-violet-500 animate-spin shrink-0"
+                    />
                     <span className="text-xs text-violet-700 font-medium">
-                      AI scanner in progress — cross-referencing against government registries
+                      AI scanner in progress — cross-referencing against
+                      government registries
                     </span>
                   </div>
                 )}
@@ -239,13 +286,28 @@ export default function StaffPortal() {
                   {selected.aiCheck.map((check, i) => (
                     <div key={i} className="flex items-start gap-2 text-sm">
                       {check.status === "pass" ? (
-                        <CheckCircle2 size={16} className="text-accent-green mt-0.5 shrink-0" />
+                        <CheckCircle2
+                          size={16}
+                          className="text-accent-green mt-0.5 shrink-0"
+                        />
                       ) : check.status === "warning" ? (
-                        <AlertTriangle size={16} className="text-accent-amber mt-0.5 shrink-0" />
+                        <AlertTriangle
+                          size={16}
+                          className="text-accent-amber mt-0.5 shrink-0"
+                        />
                       ) : (
-                        <Loader2 size={16} className="text-violet-400 mt-0.5 shrink-0 animate-spin" />
+                        <Loader2
+                          size={16}
+                          className="text-violet-400 mt-0.5 shrink-0 animate-spin"
+                        />
                       )}
-                      <span className={check.status === "info" ? "text-text-secondary" : "text-text-primary"}>
+                      <span
+                        className={
+                          check.status === "info"
+                            ? "text-text-secondary"
+                            : "text-text-primary"
+                        }
+                      >
                         {check.label}
                       </span>
                     </div>
