@@ -67,7 +67,7 @@ export default function CitizenPortal() {
 
   return (
     <div className="min-h-full">
-      <div className="px-8 py-6 border-b border-border bg-white">
+      <div className="px-4 sm:px-8 py-6 border-b border-border bg-white">
         <h1 className="text-xl font-semibold text-text-primary">
           Citizen Portal
         </h1>
@@ -77,7 +77,7 @@ export default function CitizenPortal() {
       </div>
 
       {/* Tabs */}
-      <div className="px-8 bg-white border-b border-border">
+      <div className="px-4 sm:px-8 bg-white border-b border-border overflow-x-auto">
         <div className="flex gap-0">
           <button
             onClick={() => setActiveTab("apply")}
@@ -108,13 +108,13 @@ export default function CitizenPortal() {
         </div>
       </div>
 
-      <div className="p-8 max-w-4xl">
+      <div className="p-4 sm:p-8 max-w-4xl">
         {activeTab === "apply" && !submitted && (
           <>
-            {/* Stepper */}
-            <div className="flex items-center gap-2 mb-8">
+            {/* Stepper - scrollable on mobile */}
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto pb-1 -mx-1 px-1">
               {steps.map((label, i) => (
-                <div key={label} className="flex items-center gap-2">
+                <div key={label} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                   <button
                     onClick={() => setCurrentStep(i)}
                     className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
@@ -143,7 +143,7 @@ export default function CitizenPortal() {
                 <h2 className="font-semibold text-text-primary mb-4">
                   Applicant Information
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Field label="Full Name" value={form.fullName} onChange={(v) => setForm({ ...form, fullName: v })} />
                   <Field label="PhilSys / eGovPH ID" value={form.philsysId} onChange={(v) => setForm({ ...form, philsysId: v })} />
                   <Field label="Contact Number" value={form.contact} onChange={(v) => setForm({ ...form, contact: v })} />
@@ -161,7 +161,7 @@ export default function CitizenPortal() {
                 <h2 className="font-semibold text-text-primary mb-4">
                   Business Information
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Field label="Business Name" value={form.businessName} onChange={(v) => setForm({ ...form, businessName: v })} />
                   <div>
                     <label className="block text-xs font-medium text-text-secondary mb-1">
@@ -359,7 +359,7 @@ export default function CitizenPortal() {
               <h2 className="font-semibold text-text-primary mb-3">
                 Track Your Application
               </h2>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <input
                   type="text"
                   value={trackRef}
@@ -446,9 +446,9 @@ export default function CitizenPortal() {
                     {smsNotifications.map((sms, i) => (
                       <div
                         key={i}
-                        className="flex gap-3 px-4 py-3 bg-surface rounded text-sm"
+                        className="flex flex-col sm:flex-row gap-1 sm:gap-3 px-4 py-3 bg-surface rounded text-sm"
                       >
-                        <span className="text-xs text-text-muted whitespace-nowrap font-medium">
+                        <span className="text-xs text-text-muted font-medium shrink-0">
                           {sms.time}
                         </span>
                         <span className="text-text-secondary">{sms.message}</span>

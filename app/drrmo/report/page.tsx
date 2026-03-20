@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   eventSummary,
   barangayRiskScores,
@@ -17,6 +20,8 @@ import {
   Radio,
   Zap,
   TrendingUp,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 const priorityConfig: Record<
@@ -29,7 +34,15 @@ const priorityConfig: Record<
   Low: { color: "text-green-700", bg: "bg-green-50 border-green-200", icon: "🟢" },
 };
 
+const INITIAL_SHOWN = 5;
+
 export default function PostDisasterReport() {
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedRows = showAll
+    ? barangayRiskScores
+    : barangayRiskScores.slice(0, INITIAL_SHOWN);
+
   return (
     <div className="min-h-full">
       {/* Header */}
@@ -100,7 +113,7 @@ export default function PostDisasterReport() {
           </div>
         </div>
 
-        {/* Section 1: Barangay Risk Score Table */}
+        {/* Section 1: Barangay Risk Scores */}
         <div className="bg-white border border-border rounded">
           <div className="px-4 sm:px-6 py-4 border-b border-border">
             <h2 className="font-semibold text-text-primary flex items-center gap-2">
@@ -115,46 +128,26 @@ export default function PostDisasterReport() {
             <table className="w-full text-sm min-w-[800px]">
               <thead>
                 <tr className="border-b border-border bg-surface">
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">
-                    Rank
-                  </th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">
-                    Barangay
-                  </th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">
-                    Risk Score
-                  </th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">
-                    Sensor Alerts
-                  </th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">
-                    Citizen Reports
-                  </th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">
-                    Dominant Hazard
-                  </th>
-                  <th className="text-right px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">
-                    Households
-                  </th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">
-                    Aid Priority
-                  </th>
+                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">Rank</th>
+                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">Barangay</th>
+                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">Risk Score</th>
+                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">Sensor Alerts</th>
+                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">Citizen Reports</th>
+                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">Dominant Hazard</th>
+                  <th className="text-right px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">Households</th>
+                  <th className="text-left px-4 py-3 font-medium text-text-secondary text-xs uppercase tracking-wide">Aid Priority</th>
                 </tr>
               </thead>
               <tbody>
-                {barangayRiskScores.map((row) => {
+                {displayedRows.map((row) => {
                   const pConfig = priorityConfig[row.aidPriority];
                   return (
                     <tr
                       key={row.rank}
                       className="border-b border-border last:border-0 hover:bg-surface/50"
                     >
-                      <td className="px-4 py-3 text-text-muted font-mono text-xs">
-                        {row.rank}
-                      </td>
-                      <td className="px-4 py-3 font-medium text-text-primary">
-                        {row.barangay}
-                      </td>
+                      <td className="px-4 py-3 text-text-muted font-mono text-xs">{row.rank}</td>
+                      <td className="px-4 py-3 font-medium text-text-primary">{row.barangay}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-2 bg-surface rounded overflow-hidden">
@@ -168,9 +161,7 @@ export default function PostDisasterReport() {
                                   ? "bg-amber-400"
                                   : "bg-green-400"
                               }`}
-                              style={{
-                                width: `${row.riskScore}%`,
-                              }}
+                              style={{ width: `${row.riskScore}%` }}
                             />
                           </div>
                           <span className="text-xs font-mono text-text-secondary">
@@ -178,15 +169,9 @@ export default function PostDisasterReport() {
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-text-secondary text-xs">
-                        {row.sensorAlerts}
-                      </td>
-                      <td className="px-4 py-3 text-text-secondary text-xs">
-                        {row.citizenReports}
-                      </td>
-                      <td className="px-4 py-3 text-text-secondary text-xs">
-                        {row.dominantHazard}
-                      </td>
+                      <td className="px-4 py-3 text-text-secondary text-xs">{row.sensorAlerts}</td>
+                      <td className="px-4 py-3 text-text-secondary text-xs">{row.citizenReports}</td>
+                      <td className="px-4 py-3 text-text-secondary text-xs">{row.dominantHazard}</td>
                       <td className="px-4 py-3 text-right text-text-secondary text-xs font-mono">
                         {row.householdsAffected.toLocaleString()}
                       </td>
@@ -203,6 +188,32 @@ export default function PostDisasterReport() {
               </tbody>
             </table>
           </div>
+
+          {/* Show All / Show Less toggle */}
+          {barangayRiskScores.length > INITIAL_SHOWN && (
+            <div className="border-t border-border">
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 text-xs font-medium text-text-secondary hover:text-primary hover:bg-surface transition-colors"
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp size={14} />
+                    Show fewer barangays
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown size={14} />
+                    Show all {barangayRiskScores.length} barangays
+                    <span className="text-text-muted">
+                      ({barangayRiskScores.length - INITIAL_SHOWN} more)
+                    </span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
           <div className="px-4 sm:px-6 py-3 bg-surface border-t border-border">
             <p className="text-xs text-text-muted leading-relaxed">
               Risk scores are computed from sensor threshold breaches (30%),
@@ -221,8 +232,7 @@ export default function PostDisasterReport() {
               Aid Delivery Prioritization
             </h2>
             <p className="text-xs text-text-muted mt-1">
-              Recommended order for relief distribution based on computed risk
-              scores
+              Recommended order for relief distribution based on computed risk scores
             </p>
           </div>
           <div className="p-4 sm:p-6 space-y-3">
@@ -237,17 +247,11 @@ export default function PostDisasterReport() {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-text-muted">
-                        {i + 1}.
-                      </span>
-                      <span
-                        className={`text-xs font-semibold px-2 py-0.5 rounded ${pConfig.bg} ${pConfig.color}`}
-                      >
+                      <span className="text-sm font-bold text-text-muted">{i + 1}.</span>
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded ${pConfig.bg} ${pConfig.color}`}>
                         {pConfig.icon} {item.priority}
                       </span>
-                      <span className="text-sm font-medium text-text-primary">
-                        {item.barangay}
-                      </span>
+                      <span className="text-sm font-medium text-text-primary">{item.barangay}</span>
                     </div>
                     <span className="text-xs font-mono text-text-secondary">
                       {item.households.toLocaleString()} households
@@ -285,34 +289,7 @@ export default function PostDisasterReport() {
           </div>
         </div>
 
-        {/* Section 3: Data Sources Summary */}
-        <div className="bg-white border border-border rounded">
-          <div className="px-4 sm:px-6 py-4 border-b border-border">
-            <h2 className="font-semibold text-text-primary flex items-center gap-2">
-              <Database size={16} />
-              Data Sources Summary
-            </h2>
-          </div>
-          <div className="p-4 sm:p-6">
-            <div className="grid sm:grid-cols-2 gap-4">
-              {dataSources.map((source) => (
-                <div
-                  key={source.label}
-                  className="border border-border rounded p-4"
-                >
-                  <div className="text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
-                    {source.label}
-                  </div>
-                  <div className="text-sm text-text-primary leading-relaxed">
-                    {source.detail}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Section 4: Recommendations */}
+        {/* Section 3: Recommendations */}
         <div className="bg-white border border-border rounded">
           <div className="px-4 sm:px-6 py-4 border-b border-border">
             <h2 className="font-semibold text-text-primary flex items-center gap-2">
@@ -331,13 +308,33 @@ export default function PostDisasterReport() {
                   className="flex gap-3 items-start px-4 py-3 bg-surface rounded border border-border"
                 >
                   <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-primary">
-                      {i + 1}
-                    </span>
+                    <span className="text-xs font-bold text-primary">{i + 1}</span>
                   </span>
-                  <p className="text-sm text-text-primary leading-relaxed">
-                    {rec}
-                  </p>
+                  <p className="text-sm text-text-primary leading-relaxed">{rec}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Section 4: Data Sources Summary */}
+        <div className="bg-white border border-border rounded">
+          <div className="px-4 sm:px-6 py-4 border-b border-border">
+            <h2 className="font-semibold text-text-primary flex items-center gap-2">
+              <Database size={16} />
+              Data Sources Summary
+            </h2>
+          </div>
+          <div className="p-4 sm:p-6">
+            <div className="grid sm:grid-cols-2 gap-4">
+              {dataSources.map((source) => (
+                <div key={source.label} className="border border-border rounded p-4">
+                  <div className="text-xs font-medium text-text-muted uppercase tracking-wide mb-1">
+                    {source.label}
+                  </div>
+                  <div className="text-sm text-text-primary leading-relaxed">
+                    {source.detail}
+                  </div>
                 </div>
               ))}
             </div>
@@ -346,8 +343,7 @@ export default function PostDisasterReport() {
 
         {/* Footer */}
         <div className="text-center text-xs text-text-muted py-4 border-t border-border">
-          Report generated automatically by DigiTALINO DRRM Module · CSCI_67 —
-          IM Summit 2026 Demo
+          Report generated automatically by DigiTALINO DRRM Module · CSCI_67 — IM Summit 2026 Demo
         </div>
       </div>
     </div>

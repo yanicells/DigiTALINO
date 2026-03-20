@@ -153,28 +153,28 @@ export default function DrrmoDashboard() {
         </div>
       )}
 
-      <div className="px-8 py-6 border-b border-border bg-white">
-        <div className="flex items-center justify-between">
+      <div className="px-4 sm:px-8 py-4 sm:py-6 border-b border-border bg-white">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-xl font-semibold text-text-primary">
               DRRMO Dashboard
             </h1>
-            <p className="text-sm text-text-secondary mt-1">
-              Disaster Risk Reduction & Management Office — Real-time Monitoring
+            <p className="text-sm text-text-secondary mt-0.5">
+              Disaster Risk Reduction &amp; Management Office — Real-time Monitoring
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 shrink-0">
             <button
               onClick={() => setIsRunning(true)}
               disabled={isRunning || simStep > 0}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-white rounded hover:bg-primary-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium bg-primary text-white rounded hover:bg-primary-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Play size={14} />
               Start Simulation
             </button>
             <button
               onClick={resetSimulation}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border border-border text-text-primary rounded hover:bg-surface transition-colors"
+              className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium border border-border text-text-primary rounded hover:bg-surface transition-colors"
             >
               <RotateCcw size={14} />
               Reset
@@ -183,17 +183,17 @@ export default function DrrmoDashboard() {
         </div>
       </div>
 
-      <div className="p-8">
-        <div className="flex flex-col lg:flex-row gap-6" style={{ minHeight: "calc(100vh - 200px)" }}>
+      <div className="p-4 sm:p-8">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6" style={{ minHeight: "calc(100vh - 200px)" }}>
           {/* Left: Map */}
-          <div className="flex-3 min-w-0">
-            <div className="bg-white border border-border rounded h-full overflow-hidden">
+          <div className="flex-3 min-w-0" style={{ height: "clamp(320px, 50vw, 600px)" }}>
+            <div className="bg-white border border-border rounded h-full overflow-hidden" style={{ isolation: "isolate" }}>
               <DrrmoMap sensors={sensors} visibleReports={visibleReports} />
             </div>
           </div>
 
           {/* Right: Panel */}
-          <div className="flex-2 flex flex-col gap-4 overflow-y-auto min-w-85">
+          <div className="flex-2 flex flex-col gap-4 lg:overflow-y-auto min-w-0 lg:min-w-72">
             {/* Sensor Readings */}
             <div className="bg-white border border-border rounded">
               <div className="px-4 py-3 border-b border-border">
