@@ -93,7 +93,7 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
           <strong>${sensor.id}</strong><br/>
           ${sensor.location}<br/>
           Water Level: ${sensor.waterLevel}m / ${sensor.threshold}m
-        </div>`
+        </div>`,
       );
 
       sensorMarkerRef.current.set(sensor.id, marker);
@@ -120,7 +120,7 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
       map.remove();
       mapRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Keep map size in sync with container resizes.
@@ -149,8 +149,8 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
         sensor.status === "critical"
           ? "#dc2626"
           : sensor.status === "elevated"
-          ? "#f59e0b"
-          : "#2563eb";
+            ? "#f59e0b"
+            : "#2563eb";
 
       marker.setStyle({
         fillColor: color,
@@ -162,7 +162,7 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
           <strong>${sensor.id}</strong><br/>
           ${sensor.location}<br/>
           Water Level: ${sensor.waterLevel.toFixed(1)}m / ${sensor.threshold.toFixed(1)}m
-        </div>`
+        </div>`,
       );
     });
   }, [sensors]);
@@ -227,7 +227,9 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
         // After 2.5s, switch back to the full popup (for on-click use) and close
         autoCloseTimerRef.current = setTimeout(() => {
           map.closePopup();
-          newestMarker.bindPopup(buildFullPopup(newestReport), { maxWidth: 260 });
+          newestMarker.bindPopup(buildFullPopup(newestReport), {
+            maxWidth: 260,
+          });
         }, 2500);
       }
     }
@@ -235,10 +237,5 @@ export default function DrrmoMap({ sensors, visibleReports }: DrrmoMapProps) {
     prevCountRef.current = newCount;
   }, [visibleReports]);
 
-  return (
-    <div
-      ref={containerRef}
-      className="w-full h-full rounded"
-    />
-  );
+  return <div ref={containerRef} className="w-full h-full rounded" />;
 }

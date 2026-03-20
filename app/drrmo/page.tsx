@@ -27,9 +27,20 @@ const DrrmoMap = dynamic(() => import("@/components/drrmo-map"), {
 export default function DrrmoDashboard() {
   const [sensors, setSensors] = useState<Sensor[]>(initialSensors);
   const [visibleReports, setVisibleReports] = useState<SmsReport[]>([]);
-  const [alertLog, setAlertLog] = useState<{ time: string; message: string; level: "info" | "warning" | "critical" }[]>([
-    { time: "14:22:00", message: "Routine monitoring: All sensors within normal range", level: "info" },
-    { time: "14:23:00", message: "S-002 Riverside Canal: 2.7m — Elevated. Continuing observation.", level: "info" },
+  const [alertLog, setAlertLog] = useState<
+    { time: string; message: string; level: "info" | "warning" | "critical" }[]
+  >([
+    {
+      time: "14:22:00",
+      message: "Routine monitoring: All sensors within normal range",
+      level: "info",
+    },
+    {
+      time: "14:23:00",
+      message:
+        "S-002 Riverside Canal: 2.7m — Elevated. Continuing observation.",
+      level: "info",
+    },
   ]);
   const [isRunning, setIsRunning] = useState(false);
   const [simStep, setSimStep] = useState(0);
@@ -47,8 +58,17 @@ export default function DrrmoDashboard() {
     setYellowWarning(false);
     setThresholdBreached(false);
     setAlertLog([
-      { time: "14:22:00", message: "Routine monitoring: All sensors within normal range", level: "info" },
-      { time: "14:23:00", message: "S-002 Riverside Canal: 2.7m — Elevated. Continuing observation.", level: "info" },
+      {
+        time: "14:22:00",
+        message: "Routine monitoring: All sensors within normal range",
+        level: "info",
+      },
+      {
+        time: "14:23:00",
+        message:
+          "S-002 Riverside Canal: 2.7m — Elevated. Continuing observation.",
+        level: "info",
+      },
     ]);
   }, []);
 
@@ -67,48 +87,80 @@ export default function DrrmoDashboard() {
         // Step 3: S-002 starts rising
         if (next === 3) {
           setSensors((s) =>
-            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.8, status: "elevated" as const } : x)
+            s.map((x) =>
+              x.id === "S-002"
+                ? { ...x, waterLevel: 2.8, status: "elevated" as const }
+                : x,
+            ),
           );
           setAlertLog((l) => [
             ...l,
-            { time: "14:25:38", message: "S-002 rising: 2.8m — monitoring actively (threshold: 3.0m)", level: "info" },
+            {
+              time: "14:25:38",
+              message:
+                "S-002 rising: 2.8m — monitoring actively (threshold: 3.0m)",
+              level: "info",
+            },
           ]);
         }
 
         // Step 4: After 4 SMS — YELLOW WARNING
         if (next === 4) {
           setSensors((s) =>
-            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.87, status: "elevated" as const } : x)
+            s.map((x) =>
+              x.id === "S-002"
+                ? { ...x, waterLevel: 2.87, status: "elevated" as const }
+                : x,
+            ),
           );
           setYellowWarning(true);
           setAlertLog((l) => [
             ...l,
-            { time: "14:26:30", message: "WARNING — S-002 at 2.87m: Approaching flood threshold. DRRMO teams on standby.", level: "warning" },
+            {
+              time: "14:26:30",
+              message:
+                "WARNING — S-002 at 2.87m: Approaching flood threshold. DRRMO teams on standby.",
+              level: "warning",
+            },
           ]);
         }
 
         // Step 7: S-002 approaching critical
         if (next === 7) {
           setSensors((s) =>
-            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 2.95, status: "elevated" as const } : x)
+            s.map((x) =>
+              x.id === "S-002"
+                ? { ...x, waterLevel: 2.95, status: "elevated" as const }
+                : x,
+            ),
           );
           setAlertLog((l) => [
             ...l,
-            { time: "14:29:55", message: "WARNING — S-002 at 2.95m: Pre-emptive evacuation advisory for Brgy Riverside issued.", level: "warning" },
+            {
+              time: "14:29:55",
+              message:
+                "WARNING — S-002 at 2.95m: Pre-emptive evacuation advisory for Brgy Riverside issued.",
+              level: "warning",
+            },
           ]);
         }
 
         // Step 8: After 8 SMS — RED CRITICAL BREACH
         if (next === 8) {
           setSensors((s) =>
-            s.map((x) => x.id === "S-002" ? { ...x, waterLevel: 3.0, status: "critical" as const } : x)
+            s.map((x) =>
+              x.id === "S-002"
+                ? { ...x, waterLevel: 3.0, status: "critical" as const }
+                : x,
+            ),
           );
           setThresholdBreached(true);
           setAlertLog((l) => [
             ...l,
             {
               time: "14:30:22",
-              message: "THRESHOLD BREACHED: S-002 at 3.0m — Bulk SMS dispatched to 2,847 registered residents in Barangay Riverside",
+              message:
+                "THRESHOLD BREACHED: S-002 at 3.0m — Bulk SMS dispatched to 2,847 registered residents in Barangay Riverside",
               level: "critical",
             },
           ]);
@@ -138,7 +190,8 @@ export default function DrrmoDashboard() {
         <div className="px-4 sm:px-8 py-3 bg-accent-amber text-white flex items-center gap-3">
           <AlertTriangle size={18} />
           <span className="text-sm font-medium">
-            ELEVATED WATER LEVEL — Sensor S-002 (Riverside Canal) approaching flood threshold — DRRMO teams on standby, evacuation advisory issued
+            ELEVATED WATER LEVEL — Sensor S-002 (Riverside Canal) approaching
+            flood threshold — DRRMO teams on standby, evacuation advisory issued
           </span>
         </div>
       )}
@@ -148,7 +201,8 @@ export default function DrrmoDashboard() {
         <div className="px-4 sm:px-8 py-3 bg-accent-red text-white flex items-center gap-3">
           <AlertTriangle size={18} />
           <span className="text-sm font-medium">
-            FLOOD THRESHOLD BREACHED — Sensor S-002 (Riverside Canal) — Automated SMS alert dispatched to Barangay Riverside residents
+            FLOOD THRESHOLD BREACHED — Sensor S-002 (Riverside Canal) —
+            Automated SMS alert dispatched to Barangay Riverside residents
           </span>
         </div>
       )}
@@ -160,7 +214,8 @@ export default function DrrmoDashboard() {
               DRRMO Dashboard
             </h1>
             <p className="text-sm text-text-secondary mt-0.5">
-              Disaster Risk Reduction &amp; Management Office — Real-time Monitoring
+              Disaster Risk Reduction &amp; Management Office — Real-time
+              Monitoring
             </p>
           </div>
           <div className="flex gap-2 shrink-0">
@@ -187,7 +242,10 @@ export default function DrrmoDashboard() {
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:h-[calc(100vh-220px)]">
           {/* Left: Map */}
           <div className="flex-3 min-w-0 lg:h-full drrmo-map-height">
-            <div className="bg-white border border-border rounded h-full overflow-hidden" style={{ isolation: "isolate" }}>
+            <div
+              className="bg-white border border-border rounded h-full overflow-hidden"
+              style={{ isolation: "isolate" }}
+            >
               <DrrmoMap sensors={sensors} visibleReports={visibleReports} />
             </div>
           </div>
@@ -224,14 +282,15 @@ export default function DrrmoDashboard() {
                               isBreached
                                 ? "bg-accent-red"
                                 : sensor.status === "elevated"
-                                ? "bg-accent-amber"
-                                : "bg-accent-green"
+                                  ? "bg-accent-amber"
+                                  : "bg-accent-green"
                             }`}
                             style={{ width: `${Math.min(pct, 100)}%` }}
                           />
                         </div>
                         <span className="text-xs text-text-secondary whitespace-nowrap font-mono">
-                          {sensor.waterLevel.toFixed(1)}m / {sensor.threshold.toFixed(1)}m
+                          {sensor.waterLevel.toFixed(1)}m /{" "}
+                          {sensor.threshold.toFixed(1)}m
                         </span>
                       </div>
                     </div>
@@ -298,8 +357,8 @@ export default function DrrmoDashboard() {
                       entry.level === "critical"
                         ? "bg-accent-red/5 text-accent-red"
                         : entry.level === "warning"
-                        ? "text-accent-amber"
-                        : "text-text-secondary"
+                          ? "text-accent-amber"
+                          : "text-text-secondary"
                     }`}
                   >
                     <span className="font-mono font-medium">{entry.time}</span>
@@ -320,13 +379,27 @@ export default function DrrmoDashboard() {
 
 function SensorStatusBadge({ status }: { status: Sensor["status"] }) {
   const config = {
-    normal: { label: "Normal", color: "text-accent-green bg-accent-green/10", dot: "bg-accent-green" },
-    elevated: { label: "Elevated", color: "text-accent-amber bg-accent-amber/10", dot: "bg-accent-amber" },
-    critical: { label: "Critical", color: "text-accent-red bg-accent-red/10", dot: "bg-accent-red" },
+    normal: {
+      label: "Normal",
+      color: "text-accent-green bg-accent-green/10",
+      dot: "bg-accent-green",
+    },
+    elevated: {
+      label: "Elevated",
+      color: "text-accent-amber bg-accent-amber/10",
+      dot: "bg-accent-amber",
+    },
+    critical: {
+      label: "Critical",
+      color: "text-accent-red bg-accent-red/10",
+      dot: "bg-accent-red",
+    },
   };
   const c = config[status];
   return (
-    <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded ${c.color}`}>
+    <span
+      className={`inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded ${c.color}`}
+    >
       <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
       {c.label}
     </span>

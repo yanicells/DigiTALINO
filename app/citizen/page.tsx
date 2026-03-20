@@ -13,7 +13,12 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-const steps = ["Applicant Info", "Business Info", "Documents", "Review & Submit"];
+const steps = [
+  "Applicant Info",
+  "Business Info",
+  "Documents",
+  "Review & Submit",
+];
 
 const documents = [
   { name: "Barangay Business Clearance", required: true },
@@ -27,20 +32,68 @@ const documents = [
 ];
 
 const trackingTimeline = [
-  { step: "Application Submitted", department: "System", status: "completed" as const, date: "Mar 18, 2026" },
-  { step: "Barangay Clearance Verification", department: "Barangay Hall", status: "completed" as const, date: "Mar 18, 2026" },
-  { step: "Fire Safety Inspection", department: "BFP", status: "completed" as const, date: "Mar 19, 2026" },
-  { step: "Sanitary/Health Clearance", department: "Municipal Health Office", status: "completed" as const, date: "Mar 19, 2026" },
-  { step: "Zoning Compliance Check", department: "Zoning Office", status: "in-review" as const, date: "Mar 19, 2026" },
-  { step: "Business Permit Assessment", department: "BPLO", status: "pending" as const, date: "—" },
-  { step: "Treasury Payment", department: "Treasury", status: "pending" as const, date: "—" },
+  {
+    step: "Application Submitted",
+    department: "System",
+    status: "completed" as const,
+    date: "Mar 18, 2026",
+  },
+  {
+    step: "Barangay Clearance Verification",
+    department: "Barangay Hall",
+    status: "completed" as const,
+    date: "Mar 18, 2026",
+  },
+  {
+    step: "Fire Safety Inspection",
+    department: "BFP",
+    status: "completed" as const,
+    date: "Mar 19, 2026",
+  },
+  {
+    step: "Sanitary/Health Clearance",
+    department: "Municipal Health Office",
+    status: "completed" as const,
+    date: "Mar 19, 2026",
+  },
+  {
+    step: "Zoning Compliance Check",
+    department: "Zoning Office",
+    status: "in-review" as const,
+    date: "Mar 19, 2026",
+  },
+  {
+    step: "Business Permit Assessment",
+    department: "BPLO",
+    status: "pending" as const,
+    date: "—",
+  },
+  {
+    step: "Treasury Payment",
+    department: "Treasury",
+    status: "pending" as const,
+    date: "—",
+  },
 ];
 
 const smsNotifications = [
-  { time: "Mar 18, 10:23 AM", message: "Your business permit application BP-2026-00147 has been received. Estimated processing: 1-3 business days." },
-  { time: "Mar 18, 2:15 PM", message: "Barangay clearance verified for BP-2026-00147." },
-  { time: "Mar 19, 9:41 AM", message: "BFP fire safety inspection cleared for BP-2026-00147." },
-  { time: "Mar 19, 11:02 AM", message: "Health/Sanitary clearance approved for BP-2026-00147." },
+  {
+    time: "Mar 18, 10:23 AM",
+    message:
+      "Your business permit application BP-2026-00147 has been received. Estimated processing: 1-3 business days.",
+  },
+  {
+    time: "Mar 18, 2:15 PM",
+    message: "Barangay clearance verified for BP-2026-00147.",
+  },
+  {
+    time: "Mar 19, 9:41 AM",
+    message: "BFP fire safety inspection cleared for BP-2026-00147.",
+  },
+  {
+    time: "Mar 19, 11:02 AM",
+    message: "Health/Sanitary clearance approved for BP-2026-00147.",
+  },
 ];
 
 export default function CitizenPortal() {
@@ -129,7 +182,10 @@ export default function CitizenPortal() {
             {/* Stepper - scrollable on mobile */}
             <div className="flex items-center gap-1.5 sm:gap-2 mb-6 sm:mb-8 overflow-x-auto hide-scrollbar pb-1 -mx-1 px-1">
               {steps.map((label, i) => (
-                <div key={label} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <div
+                  key={label}
+                  className="flex items-center gap-1.5 sm:gap-2 shrink-0"
+                >
                   <button
                     ref={(el) => {
                       stepRefs.current[i] = el;
@@ -139,8 +195,8 @@ export default function CitizenPortal() {
                       i === currentStep
                         ? "bg-primary text-white"
                         : i < currentStep
-                        ? "bg-accent-green/10 text-accent-green"
-                        : "bg-surface text-text-muted"
+                          ? "bg-accent-green/10 text-accent-green"
+                          : "bg-surface text-text-muted"
                     }`}
                   >
                     <span className="w-5 h-5 rounded-full border flex items-center justify-center text-[10px] font-semibold border-current">
@@ -162,12 +218,32 @@ export default function CitizenPortal() {
                   Applicant Information
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Field label="Full Name" value={form.fullName} onChange={(v) => setForm({ ...form, fullName: v })} />
-                  <Field label="PhilSys / eGovPH ID" value={form.philsysId} onChange={(v) => setForm({ ...form, philsysId: v })} />
-                  <Field label="Contact Number" value={form.contact} onChange={(v) => setForm({ ...form, contact: v })} />
-                  <Field label="Email Address" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+                  <Field
+                    label="Full Name"
+                    value={form.fullName}
+                    onChange={(v) => setForm({ ...form, fullName: v })}
+                  />
+                  <Field
+                    label="PhilSys / eGovPH ID"
+                    value={form.philsysId}
+                    onChange={(v) => setForm({ ...form, philsysId: v })}
+                  />
+                  <Field
+                    label="Contact Number"
+                    value={form.contact}
+                    onChange={(v) => setForm({ ...form, contact: v })}
+                  />
+                  <Field
+                    label="Email Address"
+                    value={form.email}
+                    onChange={(v) => setForm({ ...form, email: v })}
+                  />
                   <div className="sm:col-span-2">
-                    <Field label="Address" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
+                    <Field
+                      label="Address"
+                      value={form.address}
+                      onChange={(v) => setForm({ ...form, address: v })}
+                    />
                   </div>
                 </div>
               </div>
@@ -180,14 +256,20 @@ export default function CitizenPortal() {
                   Business Information
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Field label="Business Name" value={form.businessName} onChange={(v) => setForm({ ...form, businessName: v })} />
+                  <Field
+                    label="Business Name"
+                    value={form.businessName}
+                    onChange={(v) => setForm({ ...form, businessName: v })}
+                  />
                   <div>
                     <label className="block text-xs font-medium text-text-secondary mb-1">
                       Business Type
                     </label>
                     <select
                       value={form.businessType}
-                      onChange={(e) => setForm({ ...form, businessType: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, businessType: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-border rounded text-sm bg-white text-text-primary"
                     >
                       <option>Sole Proprietorship</option>
@@ -196,7 +278,11 @@ export default function CitizenPortal() {
                     </select>
                   </div>
                   <div className="sm:col-span-2">
-                    <Field label="Business Address" value={form.businessAddress} onChange={(v) => setForm({ ...form, businessAddress: v })} />
+                    <Field
+                      label="Business Address"
+                      value={form.businessAddress}
+                      onChange={(v) => setForm({ ...form, businessAddress: v })}
+                    />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-text-secondary mb-1">
@@ -204,7 +290,9 @@ export default function CitizenPortal() {
                     </label>
                     <select
                       value={form.lineOfBusiness}
-                      onChange={(e) => setForm({ ...form, lineOfBusiness: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, lineOfBusiness: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-border rounded text-sm bg-white text-text-primary"
                     >
                       <option>General Merchandise</option>
@@ -217,8 +305,16 @@ export default function CitizenPortal() {
                       <option>Manufacturing</option>
                     </select>
                   </div>
-                  <Field label="DTI/SEC Registration Number" value={form.dtiSecNumber} onChange={(v) => setForm({ ...form, dtiSecNumber: v })} />
-                  <Field label="Capitalization Amount (₱)" value={form.capitalization} onChange={(v) => setForm({ ...form, capitalization: v })} />
+                  <Field
+                    label="DTI/SEC Registration Number"
+                    value={form.dtiSecNumber}
+                    onChange={(v) => setForm({ ...form, dtiSecNumber: v })}
+                  />
+                  <Field
+                    label="Capitalization Amount (₱)"
+                    value={form.capitalization}
+                    onChange={(v) => setForm({ ...form, capitalization: v })}
+                  />
                 </div>
               </div>
             )}
@@ -247,7 +343,9 @@ export default function CitizenPortal() {
                           Uploaded
                         </span>
                       ) : (
-                        <span className="text-xs text-text-muted">N/A (New Application)</span>
+                        <span className="text-xs text-text-muted">
+                          N/A (New Application)
+                        </span>
                       )}
                     </div>
                   ))}
@@ -270,12 +368,30 @@ export default function CitizenPortal() {
                     <ReviewRow label="Address" value={form.address} />
                   </ReviewSection>
                   <ReviewSection title="Business Information">
-                    <ReviewRow label="Business Name" value={form.businessName} />
-                    <ReviewRow label="Business Type" value={form.businessType} />
-                    <ReviewRow label="Business Address" value={form.businessAddress} />
-                    <ReviewRow label="Line of Business" value={form.lineOfBusiness} />
-                    <ReviewRow label="DTI/SEC Number" value={form.dtiSecNumber} />
-                    <ReviewRow label="Capitalization" value={`₱${Number(form.capitalization).toLocaleString()}`} />
+                    <ReviewRow
+                      label="Business Name"
+                      value={form.businessName}
+                    />
+                    <ReviewRow
+                      label="Business Type"
+                      value={form.businessType}
+                    />
+                    <ReviewRow
+                      label="Business Address"
+                      value={form.businessAddress}
+                    />
+                    <ReviewRow
+                      label="Line of Business"
+                      value={form.lineOfBusiness}
+                    />
+                    <ReviewRow
+                      label="DTI/SEC Number"
+                      value={form.dtiSecNumber}
+                    />
+                    <ReviewRow
+                      label="Capitalization"
+                      value={`₱${Number(form.capitalization).toLocaleString()}`}
+                    />
                   </ReviewSection>
                   <ReviewSection title="Documents">
                     <div className="text-sm text-accent-green">
@@ -291,8 +407,8 @@ export default function CitizenPortal() {
                     className="mt-0.5"
                   />
                   <span className="text-xs text-text-secondary leading-relaxed">
-                    I consent to the processing of my personal data in accordance
-                    with the Data Privacy Act of 2012 (RA 10173)
+                    I consent to the processing of my personal data in
+                    accordance with the Data Privacy Act of 2012 (RA 10173)
                   </span>
                 </label>
                 <button
@@ -339,7 +455,7 @@ export default function CitizenPortal() {
 
         {/* Success Modal */}
         {activeTab === "apply" && submitted && (
-            <div className="bg-white border border-border rounded p-5 sm:p-8 text-center max-w-lg mx-auto mt-8">
+          <div className="bg-white border border-border rounded p-5 sm:p-8 text-center max-w-lg mx-auto mt-8">
             <div className="w-16 h-16 rounded-full bg-accent-green/10 flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 size={32} className="text-accent-green" />
             </div>
@@ -347,8 +463,12 @@ export default function CitizenPortal() {
               Application Submitted Successfully
             </h2>
             <div className="bg-surface rounded p-4 mb-4">
-              <div className="text-xs text-text-muted mb-1">Reference Number</div>
-              <div className="text-lg font-bold text-primary">BP-2026-00147</div>
+              <div className="text-xs text-text-muted mb-1">
+                Reference Number
+              </div>
+              <div className="text-lg font-bold text-primary">
+                BP-2026-00147
+              </div>
             </div>
             <div className="text-sm text-text-secondary space-y-2 text-left mb-6">
               <p>
@@ -356,14 +476,15 @@ export default function CitizenPortal() {
                 departments for parallel processing.
               </p>
               <p>
-                You will receive SMS updates at <strong>0917-XXX-XXXX</strong> as
-                your application progresses.
+                You will receive SMS updates at <strong>0917-XXX-XXXX</strong>{" "}
+                as your application progresses.
               </p>
               <p>
                 Expected processing time: <strong>1–3 business days</strong>
               </p>
               <p>
-                You will need to visit the municipal hall only for permit pickup.
+                You will need to visit the municipal hall only for permit
+                pickup.
               </p>
             </div>
             <button
@@ -411,7 +532,8 @@ export default function CitizenPortal() {
                     Application Timeline
                   </h3>
                   <p className="text-xs text-text-muted mb-6">
-                    Reference: {trackRef} — All departments process simultaneously
+                    Reference: {trackRef} — All departments process
+                    simultaneously
                   </p>
                   <div className="space-y-0">
                     {trackingTimeline.map((item, i) => (
@@ -422,8 +544,8 @@ export default function CitizenPortal() {
                               item.status === "completed"
                                 ? "bg-accent-green text-white"
                                 : item.status === "in-review"
-                                ? "bg-primary text-white"
-                                : "bg-surface text-text-muted border border-border"
+                                  ? "bg-primary text-white"
+                                  : "bg-surface text-text-muted border border-border"
                             }`}
                           >
                             {item.status === "completed" ? (
@@ -478,7 +600,9 @@ export default function CitizenPortal() {
                         <span className="text-xs text-text-muted font-medium shrink-0">
                           {sms.time}
                         </span>
-                        <span className="text-text-secondary wrap-break-word">{sms.message}</span>
+                        <span className="text-text-secondary wrap-break-word">
+                          {sms.message}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -536,13 +660,19 @@ function ReviewSection({
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-start gap-0.5 sm:gap-0">
-      <span className="text-xs text-text-muted w-auto sm:w-36 shrink-0">{label}</span>
+      <span className="text-xs text-text-muted w-auto sm:w-36 shrink-0">
+        {label}
+      </span>
       <span className="text-sm text-text-primary wrap-break-word">{value}</span>
     </div>
   );
 }
 
-function StatusBadge({ status }: { status: "completed" | "in-review" | "pending" }) {
+function StatusBadge({
+  status,
+}: {
+  status: "completed" | "in-review" | "pending";
+}) {
   if (status === "completed")
     return (
       <span className="text-[11px] font-medium text-accent-green bg-accent-green/10 px-1.5 py-0.5 rounded">

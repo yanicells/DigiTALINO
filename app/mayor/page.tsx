@@ -43,7 +43,9 @@ export default function MayorDashboard() {
                   <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
                     <Icon size={16} className="text-primary" />
                   </div>
-                  <span className="text-xs text-text-muted">{metric.label}</span>
+                  <span className="text-xs text-text-muted">
+                    {metric.label}
+                  </span>
                 </div>
                 <div className="text-2xl font-bold text-text-primary mb-1">
                   {metric.value}
@@ -115,7 +117,9 @@ export default function MayorDashboard() {
                       key={dept.department}
                       className="border-b border-border last:border-0"
                     >
-                      <td className="py-2 px-3 font-medium">{dept.department}</td>
+                      <td className="py-2 px-3 font-medium">
+                        {dept.department}
+                      </td>
                       <td className="py-2 px-3 text-text-secondary">
                         {dept.pending}
                       </td>
@@ -153,7 +157,10 @@ export default function MayorDashboard() {
               </h2>
             </div>
             <div className="p-6 space-y-4">
-              <InfoRow label="IoT Sensors Online" value={disasterStatus.sensorsOnline} />
+              <InfoRow
+                label="IoT Sensors Online"
+                value={disasterStatus.sensorsOnline}
+              />
               <InfoRow
                 label="Last Flood Alert"
                 value={disasterStatus.lastFloodAlert}
@@ -164,9 +171,13 @@ export default function MayorDashboard() {
               />
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-text-secondary">DRRM Fund Utilization</span>
+                  <span className="text-text-secondary">
+                    DRRM Fund Utilization
+                  </span>
                   <span className="font-medium text-text-primary">
-                    ₱{disasterStatus.drrmFund.used}M of ₱{disasterStatus.drrmFund.total}M ({disasterStatus.drrmFund.percentage}%)
+                    ₱{disasterStatus.drrmFund.used}M of ₱
+                    {disasterStatus.drrmFund.total}M (
+                    {disasterStatus.drrmFund.percentage}%)
                   </span>
                 </div>
                 <div className="w-full h-2 bg-surface rounded overflow-hidden">
